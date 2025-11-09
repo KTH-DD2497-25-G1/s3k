@@ -2,26 +2,23 @@
 #![feature(linkage)]
 
 mod console;
+mod driver;
 mod ffi;
+mod plat;
 mod syscall;
 
-use core::arch::naked_asm;
+use core::arch::asm;
 use core::panic::PanicInfo;
 
 unsafe extern "C" {
     fn __stack_pointer();
 }
 
-#[unsafe(naked)]
-unsafe extern "C" fn prepare() {
-    naked_asm!("la sp, {}", sym __stack_pointer);
-}
-
 #[unsafe(no_mangle)]
-#[unsafe(link_section = ".init")]
-pub extern "C" fn _start() {
+#[unsafe(link_section = ".text.init")]
+pub unsafe extern "C" fn _start() {
     loop {
-        unsafe { prepare() };
+        unsafe { asm!("la sp, {}", sym __stack_pointer); }
         main();
     }
 }
@@ -34,6 +31,6 @@ fn main() {
 
 #[panic_handler]
 fn panic_handler(info: &PanicInfo) -> ! {
-    // println!("Panic: {}", info);
+    println!("Panic: {}", info);
     loop {}
 }
