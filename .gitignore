@@ -11,3 +11,5 @@ docs
 *.res
 compile_commands.json
 .cache
+.idea
+target
