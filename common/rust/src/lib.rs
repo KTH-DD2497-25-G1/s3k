@@ -23,7 +23,6 @@ pub unsafe extern "C" fn _start() {
     }
 }
 
-#[unsafe(no_mangle)]
 #[linkage = "weak"]
 fn main() {
     panic!("Cannot find main!");
