@@ -1,9 +1,10 @@
 use bitfield_struct::bitfield;
 use enumflags2::{BitFlags, bitflags};
+use num_enum::FromPrimitive;
 
 macro_rules! s3k_type {
     ($name:ident, $ty:ty) => {
-        #[derive(Debug, Clone)]
+        #[derive(Debug, Clone, Copy)]
         #[repr(transparent)]
         pub struct $name(pub $ty);
 
@@ -31,9 +32,9 @@ s3k_type!(S3kTag, u8);
 s3k_type!(S3kRwx, u8);
 s3k_type!(S3kPmpSlot, u8);
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, FromPrimitive)]
 #[repr(u8)]
-enum S3kErr {
+pub enum S3kErr {
     Success = 0,
     Empty,
     SrcEmpty,
@@ -53,6 +54,8 @@ enum S3kErr {
     Preempted,
     Timeout,
     Suspended,
+    #[num_enum(default)]
+    Unknown,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -101,23 +104,48 @@ enum CapType {
     Socket = 6,
 }
 
-#[repr(C)]
-union CapRaw {
-    ty: CapType,
-    raw: u64,
-    none: (),
-    time: TimeCap,
-    mem: MemCap,
-    pmp: PmpCap,
-    mon: MonCap,
-    chan: ChanCap,
-    sock: SockCap,
+impl CapType {
+    const fn from_bits(bits: u8) -> Self {
+        match bits {
+            0 => CapType::None,
+            1 => CapType::Time,
+            2 => CapType::Memory,
+            3 => CapType::Pmp,
+            4 => CapType::Monitor,
+            5 => CapType::Channel,
+            6 => CapType::Socket,
+            _ => CapType::None,
+        }
+    }
+
+    const fn into_bits(self) -> u8 {
+        self as u8
+    }
+}
+
+pub trait S3kCap: Sized {
+    unsafe fn from_raw(raw: u64) -> Result<Self, S3kErr>;
+}
+
+macro_rules! impl_cap {
+    ($name:ident, $ty:expr) => {
+        impl S3kCap for $name {
+            unsafe fn from_raw(raw: u64) -> Result<Self, S3kErr> {
+                let cap: Self = core::mem::transmute(raw);
+                if cap.ty() == $ty {
+                    Ok(cap)
+                } else {
+                    Err(S3kErr::InvalidCapability)
+                }
+            }
+        }
+    }
 }
 
 #[bitfield(u64)]
 pub struct TimeCap {
     #[bits(4, default = CapType::Time)]
-    _ty: CapType,
+    ty: CapType,
     #[bits(4)]
     _padding: u8,
     #[bits(8)]
@@ -129,11 +157,12 @@ pub struct TimeCap {
     #[bits(16)]
     pub end: S3kTimeSlot,
 }
+impl_cap!(TimeCap, CapType::Time);
 
 #[bitfield(u64)]
 pub struct MemCap {
     #[bits(4, default = CapType::Memory)]
-    _ty: CapType,
+    ty: CapType,
     #[bits(3)]
     pub rwx: S3kRwx,
     pub lck: bool,
@@ -146,11 +175,12 @@ pub struct MemCap {
     #[bits(16)]
     pub end: S3kBlock,
 }
+impl_cap!(MemCap, CapType::Memory);
 
 #[bitfield(u64)]
 pub struct PmpCap {
     #[bits(4, default = CapType::Pmp)]
-    _ty: CapType,
+    ty: CapType,
     #[bits(3)]
     pub rwx: S3kRwx,
     pub used: bool,
@@ -160,11 +190,12 @@ pub struct PmpCap {
     pub napot: S3kNapot,
     _reserved: u32,
 }
+impl_cap!(PmpCap, CapType::Pmp);
 
 #[bitfield(u64)]
 pub struct MonCap {
     #[bits(4, default = CapType::Monitor)]
-    _ty: CapType,
+    ty: CapType,
     #[bits(12)]
     _padding: u16,
     #[bits(16)]
@@ -174,11 +205,12 @@ pub struct MonCap {
     #[bits(16)]
     pub end: S3kPid,
 }
+impl_cap!(MonCap, CapType::Monitor);
 
 #[bitfield(u64)]
 pub struct ChanCap {
     #[bits(4, default = CapType::Channel)]
-    _ty: CapType,
+    ty: CapType,
     #[bits(12)]
     _padding: u16,
     #[bits(16)]
@@ -188,11 +220,12 @@ pub struct ChanCap {
     #[bits(16)]
     pub end: S3kChan,
 }
+impl_cap!(ChanCap, CapType::Channel);
 
 #[bitfield(u64)]
 pub struct SockCap {
     #[bits(4, default = CapType::Socket)]
-    _ty: CapType,
+    ty: CapType,
     #[bits(4)]
     pub mode: S3kIpcMode,
     #[bits(8)]
@@ -201,6 +234,7 @@ pub struct SockCap {
     pub chan: S3kChan,
     tag: u32,
 }
+impl_cap!(SockCap, CapType::Socket);
 
 impl SockCap {
     pub fn get_perms(&self) -> S3kIpcPerms {
@@ -223,6 +257,52 @@ pub struct S3kMsg {
 pub struct S3kReply {
     pub err: S3kErr,
     pub tag: u32,
-    pub cap: CapRaw,
+    pub cap: u64,
     pub data: [u64; 4],
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u64)]
+pub enum S3kReg {
+    PC,
+    RA,
+    SP,
+    GP,
+    TP,
+    T0,
+    T1,
+    T2,
+    S0,
+    S1,
+    A0,
+    A1,
+    A2,
+    A3,
+    A4,
+    A5,
+    A6,
+    A7,
+    S2,
+    S3,
+    S4,
+    S5,
+    S6,
+    S7,
+    S8,
+    S9,
+    S10,
+    S11,
+    T3,
+    T4,
+    T5,
+    T6,
+    TPC,
+    TSP,
+    EPC,
+    ESP,
+    ECAUSE,
+    EVAL,
+    SERVTIME,
+    /* Special value for number of registers */
+    CNT,
 }

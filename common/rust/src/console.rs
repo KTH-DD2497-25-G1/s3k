@@ -1,8 +1,11 @@
 use core::fmt::{self, Write};
+
+#[cfg(any(feature = "qemu_virt", feature = "qemu_virt4"))]
 use crate::plat::get_uart;
 
 struct UartWriter;
 
+#[cfg(any(feature = "qemu_virt", feature = "qemu_virt4"))]
 impl Write for UartWriter {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         for byte in s.bytes() {
@@ -30,6 +33,7 @@ macro_rules! println {
     }
 }
 
+#[cfg(any(feature = "qemu_virt", feature = "qemu_virt4"))]
 pub fn getchar() -> u8 {
     get_uart().getchar()
 }

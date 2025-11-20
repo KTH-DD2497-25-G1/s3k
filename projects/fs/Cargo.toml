@@ -3,4 +3,5 @@ resolver = "3"
 members = [
     "fsd",
     "app1",
+    "app2",
 ]
