@@ -5,8 +5,7 @@ version = 4
 [[package]]
 name = "bitfield-struct"
 version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8769c4854c5ada2852ddf6fd09d15cf43d4c2aaeccb4de6432f5402f08a6003b"
+source = "git+https://github.com/Dr-TSNG/bitfield-struct-rs#5bfa7210e6da3968d1723b897971cb14e0745e1a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -14,24 +13,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "enumflags2"
-version = "0.7.12"
+name = "bitflags"
+version = "2.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1027f7680c853e056ebcec683615fb6fbbc07dbaa13b4d5d9442b146ded4ecef"
-dependencies = [
- "enumflags2_derive",
-]
-
-[[package]]
-name = "enumflags2_derive"
-version = "0.7.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67c78a4d8fdf9953a5c9d458f9efe940fd97a0cab0941c075a813ac594733827"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
+checksum = "812e12b5285cc515a9c72a5c1d3b6d46a19dac5acfef5265968c166106e31dd3"
 
 [[package]]
 name = "num_enum"
@@ -83,7 +68,7 @@ name = "s3k-common"
 version = "0.1.0"
 dependencies = [
  "bitfield-struct",
- "enumflags2",
+ "bitflags",
  "num_enum",
 ]
 

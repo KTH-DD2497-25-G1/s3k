@@ -1,36 +1,24 @@
 use bitfield_struct::bitfield;
-use enumflags2::{BitFlags, bitflags};
+use bitflags::{Flags, bitflags};
 use num_enum::FromPrimitive;
 
-macro_rules! s3k_type {
-    ($name:ident, $ty:ty) => {
-        #[derive(Debug, Clone, Copy)]
-        #[repr(transparent)]
-        pub struct $name(pub $ty);
+// Min logarithmic size of a memory slice
+pub static S3K_MIN_BLOCK_SIZE: usize = 12;
+// Max logarithmic size of a memory slice
+pub static S3K_MAX_BLOCK_SIZE: usize = 27;
 
-        impl $name {
-            const fn from_bits(bits: $ty) -> Self {
-                Self(bits)
-            }
-            const fn into_bits(self) -> $ty {
-                self.0
-            }
-        }
-    };
-}
-
-s3k_type!(S3kNapot, u64);
-s3k_type!(S3kAddr, u64);
-s3k_type!(S3kState, u64);
-s3k_type!(S3kBlock, u16);
-s3k_type!(S3kChan, u16);
-s3k_type!(S3kTimeSlot, u16);
-s3k_type!(S3kPid, u16);
-s3k_type!(S3kCidx, u16);
-s3k_type!(S3kHart, u8);
-s3k_type!(S3kTag, u8);
-s3k_type!(S3kRwx, u8);
-s3k_type!(S3kPmpSlot, u8);
+pub type S3kNapot = u64;
+pub type S3kAddr = usize;
+pub type S3kState = u64;
+pub type S3kBlock = u16;
+pub type S3kChan = u16;
+pub type S3kTimeSlot = u16;
+pub type S3kPid = u16;
+pub type S3kCidx = u16;
+pub type S3kHart = u8;
+pub type S3kTag = u8;
+pub type S3kRwx = u8;
+pub type S3kPmpSlot = u8;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, FromPrimitive)]
 #[repr(u8)]
@@ -58,6 +46,19 @@ pub enum S3kErr {
     Unknown,
 }
 
+bitflags! {
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    pub struct S3kMemPerm: u8 {
+        const NONE = 0x0;
+        const R = 0x1;
+        const W = 0x2;
+        const X = 0x4;
+        const RW = Self::R.bits() | Self::W.bits();
+        const RX = Self::R.bits() | Self::X.bits();
+        const RWX = Self::R.bits() | Self::W.bits() | Self::X.bits();
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 pub enum S3kIpcMode {
@@ -74,16 +75,15 @@ impl S3kIpcMode {
     }
 }
 
-#[bitflags]
-#[repr(u8)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum S3kIpcPerm {
-    SDATA = 0x1,
-    SCAP = 0x2,
-    CDATA = 0x4,
-    CCAP = 0x8,
+bitflags! {
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    pub struct S3kIpcPerm: u8 {
+        const SDATA = 0x1;
+        const SCAP = 0x2;
+        const CDATA = 0x4;
+        const CCAP = 0x8;
+    }
 }
-pub type S3kIpcPerms = BitFlags<S3kIpcPerm>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
@@ -123,24 +123,37 @@ impl CapType {
     }
 }
 
-pub trait S3kCap: Sized {
+pub trait S3kCap: Sized + Copy + Clone {
     unsafe fn from_raw(raw: u64) -> Result<Self, S3kErr>;
+    fn as_raw(&self) -> u64;
 }
 
 macro_rules! impl_cap {
     ($name:ident, $ty:expr) => {
         impl S3kCap for $name {
             unsafe fn from_raw(raw: u64) -> Result<Self, S3kErr> {
-                let cap: Self = core::mem::transmute(raw);
+                let cap: Self = unsafe { core::mem::transmute(raw) };
                 if cap.ty() == $ty {
                     Ok(cap)
                 } else {
                     Err(S3kErr::InvalidCapability)
                 }
             }
+            fn as_raw(&self) -> u64 {
+                unsafe { core::mem::transmute(*self) }
+            }
         }
-    }
+    };
 }
+
+#[bitfield(u64)]
+pub struct EmptyCap {
+    #[bits(4, default = CapType::None)]
+    ty: CapType,
+    #[bits(60)]
+    _reserved: u64,
+}
+impl_cap!(EmptyCap, CapType::None);
 
 #[bitfield(u64)]
 pub struct TimeCap {
@@ -148,13 +161,13 @@ pub struct TimeCap {
     ty: CapType,
     #[bits(4)]
     _padding: u8,
-    #[bits(8)]
+    #[bits(8, primitive = true)]
     pub hart: S3kHart,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub bgn: S3kTimeSlot,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub mrk: S3kTimeSlot,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub end: S3kTimeSlot,
 }
 impl_cap!(TimeCap, CapType::Time);
@@ -163,16 +176,16 @@ impl_cap!(TimeCap, CapType::Time);
 pub struct MemCap {
     #[bits(4, default = CapType::Memory)]
     ty: CapType,
-    #[bits(3)]
+    #[bits(3, primitive = true)]
     pub rwx: S3kRwx,
     pub lck: bool,
-    #[bits(8)]
+    #[bits(8, primitive = true)]
     pub tag: S3kTag,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub bgn: S3kBlock,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub mrk: S3kBlock,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub end: S3kBlock,
 }
 impl_cap!(MemCap, CapType::Memory);
@@ -181,14 +194,13 @@ impl_cap!(MemCap, CapType::Memory);
 pub struct PmpCap {
     #[bits(4, default = CapType::Pmp)]
     ty: CapType,
-    #[bits(3)]
+    #[bits(3, primitive = true)]
     pub rwx: S3kRwx,
     pub used: bool,
-    #[bits(8)]
-    pub pmp_slot: S3kPmpSlot,
-    #[bits(16)]
-    pub napot: S3kNapot,
-    _reserved: u32,
+    #[bits(8, primitive = true)]
+    pub slot: S3kPmpSlot,
+    #[bits(48, primitive = true)]
+    pub addr: S3kNapot,
 }
 impl_cap!(PmpCap, CapType::Pmp);
 
@@ -198,11 +210,11 @@ pub struct MonCap {
     ty: CapType,
     #[bits(12)]
     _padding: u16,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub bgn: S3kPid,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub mrk: S3kPid,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub end: S3kPid,
 }
 impl_cap!(MonCap, CapType::Monitor);
@@ -213,11 +225,11 @@ pub struct ChanCap {
     ty: CapType,
     #[bits(12)]
     _padding: u16,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub bgn: S3kChan,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub mrk: S3kChan,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub end: S3kChan,
 }
 impl_cap!(ChanCap, CapType::Channel);
@@ -228,20 +240,20 @@ pub struct SockCap {
     ty: CapType,
     #[bits(4)]
     pub mode: S3kIpcMode,
-    #[bits(8)]
+    #[bits(8, primitive = true)]
     perm: u8,
-    #[bits(16)]
+    #[bits(16, primitive = true)]
     pub chan: S3kChan,
     tag: u32,
 }
 impl_cap!(SockCap, CapType::Socket);
 
 impl SockCap {
-    pub fn get_perms(&self) -> S3kIpcPerms {
-        BitFlags::from_bits_truncate(self.perm())
+    pub fn get_perms(&self) -> S3kIpcPerm {
+        Flags::from_bits_truncate(self.perm())
     }
 
-    pub fn set_perms(&mut self, perms: S3kIpcPerms) {
+    pub fn set_perms(&mut self, perms: S3kIpcPerm) {
         self.set_perm(perms.bits())
     }
 }

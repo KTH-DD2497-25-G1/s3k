@@ -33,7 +33,7 @@ qemu: kernel apps
 qemu-gdb: kernel apps
 	@ELFS="${ELFS}" ${ROOT}/scripts/qemu.sh -gdb tcp::3333 -S -drive file=fs.img,if=none,format=raw,id=x0 -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
-gdb: kernel apps disk-image
+gdb: kernel apps
 	@ELFS="${ELFS}" ${ROOT}/scripts/gdb.sh
 
 gdb-openocd: kernel apps

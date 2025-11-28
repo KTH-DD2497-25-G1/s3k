@@ -192,12 +192,12 @@ where
     C: S3kCap,
 {
     let mut cap = 0u64;
-    syscall!(Syscall::CapRead, idx.0 as u64, &mut cap as *mut _ as u64)
+    syscall!(Syscall::CapRead, idx as u64, &mut cap as *mut _ as u64)
         .and_then(|_| unsafe { C::from_raw(cap) })
 }
 
 pub fn s3k_try_cap_move(src: S3kCidx, dest: S3kCidx) -> Result<()> {
-    syscall!(Syscall::CapMove, src.0 as u64, dest.0 as u64).map(|_| ())
+    syscall!(Syscall::CapMove, src as u64, dest as u64).map(|_| ())
 }
 
 pub fn s3k_cap_move(src: S3kCidx, dest: S3kCidx) -> Result<()> {
@@ -211,7 +211,7 @@ pub fn s3k_cap_move(src: S3kCidx, dest: S3kCidx) -> Result<()> {
 }
 
 pub fn s3k_try_cap_delete(idx: S3kCidx) -> Result<()> {
-    syscall!(Syscall::CapDelete, idx.0 as u64).map(|_| ())
+    syscall!(Syscall::CapDelete, idx as u64).map(|_| ())
 }
 
 pub fn s3k_cap_delete(idx: S3kCidx) -> Result<()> {
@@ -225,7 +225,7 @@ pub fn s3k_cap_delete(idx: S3kCidx) -> Result<()> {
 }
 
 pub fn s3k_try_cap_revoke(idx: S3kCidx) -> Result<()> {
-    syscall!(Syscall::CapRevoke, idx.0 as u64).map(|_| ())
+    syscall!(Syscall::CapRevoke, idx as u64).map(|_| ())
 }
 
 pub fn s3k_cap_revoke(idx: S3kCidx) -> Result<()> {
@@ -238,13 +238,15 @@ pub fn s3k_cap_revoke(idx: S3kCidx) -> Result<()> {
     }
 }
 
-pub fn s3k_try_cap_derive(src: S3kCidx, dest: S3kCidx, perms: u8) -> Result<()> {
-    syscall!(Syscall::CapDerive, src.0 as u64, dest.0 as u64, perms as u64).map(|_| ())
+pub fn s3k_try_cap_derive<C>(src: S3kCidx, dest: S3kCidx, new_cap: C) -> Result<()>
+where C: S3kCap {
+    syscall!(Syscall::CapDerive, src as u64, dest as u64, new_cap.as_raw()).map(|_| ())
 }
 
-pub fn s3k_cap_derive(src: S3kCidx, dest: S3kCidx, perms: u8) -> Result<()> {
+pub fn s3k_cap_derive<C>(src: S3kCidx, dest: S3kCidx, new_cap: C) -> Result<()>
+where C: S3kCap {
     loop {
-        let res = s3k_try_cap_derive(src, dest, perms);
+        let res = s3k_try_cap_derive(src, dest, new_cap);
         match res {
             Err(S3kErr::Preempted) => continue,
             _ => return res,
@@ -253,7 +255,7 @@ pub fn s3k_cap_derive(src: S3kCidx, dest: S3kCidx, perms: u8) -> Result<()> {
 }
 
 pub fn s3k_try_pmp_load(idx: S3kCidx, slot: S3kPmpSlot) -> Result<()> {
-    syscall!(Syscall::PmpLoad, idx.0 as u64, slot.0 as u64).map(|_| ())
+    syscall!(Syscall::PmpLoad, idx as u64, slot as u64).map(|_| ())
 }
 
 pub fn s3k_pmp_load(idx: S3kCidx, slot: S3kPmpSlot) -> Result<()> {
@@ -267,7 +269,7 @@ pub fn s3k_pmp_load(idx: S3kCidx, slot: S3kPmpSlot) -> Result<()> {
 }
 
 pub fn s3k_try_pmp_unload(idx: S3kCidx) -> Result<()> {
-    syscall!(Syscall::PmpUnload, idx.0 as u64).map(|_| ())
+    syscall!(Syscall::PmpUnload, idx as u64).map(|_| ())
 }
 
 pub fn s3k_pmp_unload(idx: S3kCidx) -> Result<()> {
@@ -281,7 +283,7 @@ pub fn s3k_pmp_unload(idx: S3kCidx) -> Result<()> {
 }
 
 pub fn s3k_try_mon_suspend(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
-    syscall!(Syscall::MonSuspend, mon_idx.0 as u64, pid.0 as u64).map(|_| ())
+    syscall!(Syscall::MonSuspend, mon_idx as u64, pid as u64).map(|_| ())
 }
 
 pub fn s3k_mon_suspend(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
@@ -295,7 +297,7 @@ pub fn s3k_mon_suspend(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
 }
 
 pub fn s3k_try_mon_resume(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
-    syscall!(Syscall::MonResume, mon_idx.0 as u64, pid.0 as u64).map(|_| ())
+    syscall!(Syscall::MonResume, mon_idx as u64, pid as u64).map(|_| ())
 }
 
 pub fn s3k_mon_resume(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
@@ -309,7 +311,7 @@ pub fn s3k_mon_resume(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
 }
 
 pub fn s3k_try_mon_state_get(mon_idx: S3kCidx, pid: S3kPid) -> Result<S3kState> {
-    syscall!(Syscall::MonStateGet, mon_idx.0 as u64, pid.0 as u64).map(|state| S3kState(state))
+    syscall!(Syscall::MonStateGet, mon_idx as u64, pid as u64)
 }
 
 pub fn s3k_mon_state_get(mon_idx: S3kCidx, pid: S3kPid) -> Result<S3kState> {
@@ -323,7 +325,7 @@ pub fn s3k_mon_state_get(mon_idx: S3kCidx, pid: S3kPid) -> Result<S3kState> {
 }
 
 pub fn s3k_try_mon_yield(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
-    syscall!(Syscall::MonYield, mon_idx.0 as u64, pid.0 as u64).map(|_| ())
+    syscall!(Syscall::MonYield, mon_idx as u64, pid as u64).map(|_| ())
 }
 
 pub fn s3k_mon_yield(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
@@ -337,7 +339,7 @@ pub fn s3k_mon_yield(mon_idx: S3kCidx, pid: S3kPid) -> Result<()> {
 }
 
 pub fn s3k_try_mon_reg_read(mon_idx: S3kCidx, pid: S3kPid, reg: S3kReg) -> Result<u64> {
-    syscall!(Syscall::MonRegRead, mon_idx.0 as u64, pid.0 as u64, reg as u64)
+    syscall!(Syscall::MonRegRead, mon_idx as u64, pid as u64, reg as u64)
 }
 
 pub fn s3k_mon_reg_read(mon_idx: S3kCidx, pid: S3kPid, reg: S3kReg) -> Result<u64> {
@@ -351,7 +353,7 @@ pub fn s3k_mon_reg_read(mon_idx: S3kCidx, pid: S3kPid, reg: S3kReg) -> Result<u6
 }
 
 pub fn s3k_try_mon_reg_write(mon_idx: S3kCidx, pid: S3kPid, reg: S3kReg, val: u64) -> Result<()> {
-    syscall!(Syscall::MonRegWrite, mon_idx.0 as u64, pid.0 as u64, reg as u64, val).map(|_| ())
+    syscall!(Syscall::MonRegWrite, mon_idx as u64, pid as u64, reg as u64, val).map(|_| ())
 }
 
 pub fn s3k_mon_reg_write(mon_idx: S3kCidx, pid: S3kPid, reg: S3kReg, val: u64) -> Result<()> {
@@ -365,7 +367,7 @@ pub fn s3k_mon_reg_write(mon_idx: S3kCidx, pid: S3kPid, reg: S3kReg, val: u64) -
 }
 
 pub fn s3k_try_mon_cap_read(mon_idx: S3kCidx, pid: S3kPid, idx: S3kCidx) -> Result<u64> {
-    syscall!(Syscall::MonCapRead, mon_idx.0 as u64, pid.0 as u64, idx.0 as u64)
+    syscall!(Syscall::MonCapRead, mon_idx as u64, pid as u64, idx as u64)
 }
 
 pub fn s3k_mon_cap_read(mon_idx: S3kCidx, pid: S3kPid, idx: S3kCidx) -> Result<u64> {
@@ -385,7 +387,7 @@ pub fn s3k_try_mon_cap_move(
     dst_pid: S3kPid,
     dst_idx: S3kCidx,
 ) -> Result<()> {
-    syscall!(Syscall::MonCapMove, mon_idx.0 as u64, src_pid.0 as u64, src_idx.0 as u64, dst_pid.0 as u64, dst_idx.0 as u64).map(|_| ())
+    syscall!(Syscall::MonCapMove, mon_idx as u64, src_pid as u64, src_idx as u64, dst_pid as u64, dst_idx as u64).map(|_| ())
 }
 
 pub fn s3k_mon_cap_move(
@@ -410,7 +412,7 @@ pub fn s3k_try_mon_pmp_load(
     pmp_idx: S3kCidx,
     pmp_slot: S3kPmpSlot,
 ) -> Result<()> {
-    syscall!(Syscall::MonPmpLoad, mon_idx.0 as u64, pid.0 as u64, pmp_idx.0 as u64, pmp_slot.0 as u64).map(|_| ())
+    syscall!(Syscall::MonPmpLoad, mon_idx as u64, pid as u64, pmp_idx as u64, pmp_slot as u64).map(|_| ())
 }
 
 pub fn s3k_mon_pmp_load(
@@ -429,7 +431,7 @@ pub fn s3k_mon_pmp_load(
 }
 
 pub fn s3k_try_mon_pmp_unload(mon_idx: S3kCidx, pid: S3kPid, pmp_idx: S3kCidx) -> Result<()> {
-    syscall!(Syscall::MonPmpUnload, mon_idx.0 as u64, pid.0 as u64, pmp_idx.0 as u64).map(|_| ())
+    syscall!(Syscall::MonPmpUnload, mon_idx as u64, pid as u64, pmp_idx as u64).map(|_| ())
 }
 
 pub fn s3k_mon_pmp_unload(mon_idx: S3kCidx, pid: S3kPid, pmp_idx: S3kCidx) -> Result<()> {
@@ -445,8 +447,8 @@ pub fn s3k_mon_pmp_unload(mon_idx: S3kCidx, pid: S3kPid, pmp_idx: S3kCidx) -> Re
 pub fn s3k_try_sock_send(sock_idx: S3kCidx, msg: &S3kMsg) -> Result<()> {
     syscall!(
         Syscall::SockSend,
-        sock_idx.0 as u64,
-        msg.cap_idx.0 as u64,
+        sock_idx as u64,
+        msg.cap_idx as u64,
         msg.send_cap as u64,
         msg.data[0],
         msg.data[1],
@@ -469,8 +471,8 @@ pub fn s3k_sock_send(sock_idx: S3kCidx, msg: &S3kMsg) -> Result<()> {
 pub fn s3k_try_sock_recv(sock_idx: S3kCidx, cap_idx: S3kCidx) -> S3kReply {
     let (t0, a0, a1, a2, a3, a4, a5) = syscall_asm_multi_out!(
         Syscall::SockRecv as u64,
-        sock_idx.0 as u64,
-        cap_idx.0 as u64,
+        sock_idx as u64,
+        cap_idx as u64,
         0u64,
         0u64,
         0u64,
@@ -499,8 +501,8 @@ pub fn s3k_sock_recv(sock_idx: S3kCidx, cap_idx: S3kCidx) -> S3kReply {
 pub fn s3k_try_sock_sendrecv(sock_idx: S3kCidx, msg: &S3kMsg) -> S3kReply {
     let (t0, a0, a1, a2, a3, a4, a5) = syscall_asm_multi_out!(
         Syscall::SockSendRecv as u64,
-        sock_idx.0 as u64,
-        msg.cap_idx.0 as u64,
+        sock_idx as u64,
+        msg.cap_idx as u64,
         msg.send_cap as u64,
         msg.data[0],
         msg.data[1],

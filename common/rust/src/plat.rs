@@ -1,7 +1,7 @@
 use crate::driver::uart::ns16550a::UartDevice;
 
 #[cfg(any(feature = "qemu_virt", feature = "qemu_virt4"))]
-const UART0_BASE_ADDR: usize = 0x10000000;
+pub const UART0_BASE_ADDR: usize = 0x10000000;
 
 #[cfg(any(feature = "qemu_virt", feature = "qemu_virt4"))]
 pub fn get_uart() -> &'static UartDevice {

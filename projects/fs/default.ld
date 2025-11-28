@@ -6,7 +6,7 @@ __global_pointer$ = MIN(_sdata + 0x800, MAX(_data + 0x800, _end - 0x800));
 
 SECTIONS {
 	.text : {
-		*( .init )
+		*( .text.init )
 		*( .text .text.* )
 	} > RAM
 
