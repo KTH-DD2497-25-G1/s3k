@@ -60,4 +60,7 @@ qemu-system-riscv64 \
 	-m 128M -nographic \
 	-bios none \
 	$LOADER \
+	-chardev socket,id=chrtpm,path=/home/deenka/repos/system-sec-course/rs-s3k/tpm0/swtpm-sock \
+	-tpmdev emulator,id=tpm0,chardev=chrtpm \
+	-device tpm-tis-device,tpmdev=tpm0 \
 	$QEMU_OPTIONS
