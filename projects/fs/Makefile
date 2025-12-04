@@ -42,7 +42,7 @@ gdb-openocd: kernel apps
 disk-image: apps
 	qemu-img create fs.img 10M
 	mformat -i fs.img ::
-	mcopy -i fs.img ${BUILD}/app2 ::/app2
+	mcopy -i fs.img ${RUST_BUILD}/app2 ::/app2
 
 disk-read:
 	mdir -i fs.img
