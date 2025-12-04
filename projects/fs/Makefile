@@ -40,8 +40,8 @@ gdb-openocd: kernel apps
 	@ELFS="${INIT_ELFS}" ${ROOT}/scripts/gdb-openocd.sh
 
 disk-image: apps
-	qemu-img create fs.img 10M
-	mformat -i fs.img ::
+	qemu-img create fs.img 100M
+	mformat -i fs.img -F ::
 	mcopy -i fs.img ${RUST_BUILD}/app2 ::/app2
 
 disk-read:
