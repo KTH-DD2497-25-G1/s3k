@@ -8,6 +8,9 @@ pub mod plat;
 pub mod syscall;
 pub mod utils;
 
+#[cfg(feature = "alloc")]
+pub mod heap;
+
 use core::arch::naked_asm;
 use core::panic::PanicInfo;
 

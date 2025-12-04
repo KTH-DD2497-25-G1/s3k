@@ -4,5 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-s3k-common = { path = "../../../common/rust", features = ["qemu_virt4"] }
-
+s3k-common = { path = "../../../common/rust", features = ["alloc", "qemu_virt4"] }
+bitflags = "2.10"
+bitvec-rs = "=0.2.1"
+bytemuck = "1.24"
+downcast-rs = { version = "2.0", default-features = false, features = ["sync"] }
+log = "0.4"
+riscv = "0.15"
+spin = "0.10"
+time = { version = "0.3", default-features = false }
