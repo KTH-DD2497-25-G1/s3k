@@ -13,7 +13,8 @@ mod utils;
 
 extern crate alloc;
 
-use log::info;
+use alloc::sync::Arc;
+use log::{debug, error, info};
 use s3k_common::ffi::{S3kErr, S3kMemPerm, S3kReg};
 use s3k_common::plat::UART0_BASE_ADDR;
 use s3k_common::heap;
@@ -22,6 +23,8 @@ use s3k_common::syscall::{
     s3k_sync_mem,
 };
 use s3k_common::utils::*;
+use crate::device::virtio::VirtIOBlkDevice;
+use crate::fat32::FAT32FileSystem;
 
 type Result<T> = core::result::Result<T, S3kErr>;
 
@@ -86,7 +89,26 @@ fn _main() -> Result<()> {
     setup_uart_and_virtio()?;
     heap::init();
     logger::init();
-    info!("Hello from fsd!");
+    info!("fsd start");
+
+    let device = Arc::new(VirtIOBlkDevice::new());
+    info!("virtio block device created");
+
+    let fs = match FAT32FileSystem::new(device) {
+        Ok(fs) => fs,
+        Err(e) => {
+            error!("Failed to mount FAT32 filesystem: {:?}", e);
+            return Err(S3kErr::Unknown);
+        }
+    };
+    info!("filesystem mounted");
+
+    let root = fs.root();
+    let mut idx = 0;
+    while let Ok(inode) = root.clone().lookup_idx(idx) {
+        debug!("List file {}: {}", idx, inode.metadata().path);
+        idx += 1;
+    }
 
     // Setup app1 capabilities and PC
     // setup_other_app()?;

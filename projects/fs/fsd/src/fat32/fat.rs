@@ -59,7 +59,7 @@ impl FAT32Meta {
     pub fn new(boot_sector: &[u8]) -> FsResult<Self> {
         let ext_flags = BPBOffset::extend_flags(boot_sector);
         if ext_flags & (1 << 7) != 0 {
-            error!("Mirrored FAT is not supported");
+            error!("[fat32] Mirrored FAT is not supported");
             return Err(Errno::EINVAL);
         }
         let active = ext_flags & 0b1111;
@@ -74,11 +74,11 @@ impl FAT32Meta {
         let root_cluster = BPBOffset::root_cluster(boot_sector) as usize;
         let max_cluster = (total_sectors - data_offset) / sectors_per_cluster;
         if bytes_per_sector != BLOCK_SIZE {
-            error!("Unsupported sector size");
+            error!("[fat32] Unsupported sector size");
             return Err(Errno::EINVAL);
         }
         if total_sectors / sectors_per_cluster < 65525 {
-            error!("Not a FAT32 file system");
+            error!("[fat32] Not a FAT32 file system");
             return Err(Errno::EINVAL);
         }
         let metadata = Self {

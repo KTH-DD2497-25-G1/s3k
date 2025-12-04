@@ -49,12 +49,16 @@ impl FAT32FileSystem {
         });
         let root_cluster = fs.fat32meta.root_cluster as u32;
         fs.root.init(FAT32Inode::root(&fs, root_cluster)?);
-        info!("FAT32 metadata: {:?}", fs.fat32meta);
+        info!("[fat32] metadata: {:?}", fs.fat32meta);
         Ok(fs)
     }
 
+    pub fn root(&self) -> Arc<dyn Inode> {
+        self.root.clone()
+    }
+
     /// Read data based on cluster number and offset
-    pub fn read_data(&self, cluster: usize, buf: &mut [u8], mut offset: usize) -> FsResult {
+    fn read_data(&self, cluster: usize, buf: &mut [u8], mut offset: usize) -> FsResult {
         buf.len()
             .checked_add(offset)
             .take_if(|v| *v <= self.fat32meta.bytes_per_cluster)
@@ -81,7 +85,7 @@ impl FAT32FileSystem {
     }
 
     /// Write data based on cluster number and offset
-    pub fn write_data(&self, cluster: usize, buf: &[u8], mut offset: usize) -> FsResult {
+    fn write_data(&self, cluster: usize, buf: &[u8], mut offset: usize) -> FsResult {
         buf.len()
             .checked_add(offset)
             .take_if(|v| *v <= self.fat32meta.bytes_per_cluster)
@@ -107,7 +111,7 @@ impl FAT32FileSystem {
         Ok(())
     }
 
-    pub fn read_dir(
+    fn read_dir(
         self: &Arc<Self>,
         clusters: &[usize],
         occupy: &mut BitVec,
@@ -130,7 +134,7 @@ impl FAT32FileSystem {
                         occupy.push(false);
                         dir_pos += 1;
                         if dir_len > 0 {
-                            warn!("Broken FAT32 dirent");
+                            warn!("[fat32] Broken FAT32 dirent");
                             dir = FAT32Dirent::default();
                             dir_pos += dir_len;
                             dir_len = 0;
@@ -160,7 +164,7 @@ impl FAT32FileSystem {
         Ok(children)
     }
 
-    pub fn write_dir(&self, clusters: &[usize], pos: usize, dirent: &[u8; 32]) -> FsResult<()> {
+    fn write_dir(&self, clusters: &[usize], pos: usize, dirent: &[u8; 32]) -> FsResult<()> {
         let dirents_per_cluster = self.fat32meta.bytes_per_cluster / 32;
         let dirents_per_sector = BLOCK_SIZE / 32;
         let cluster = clusters[pos / dirents_per_cluster];
@@ -172,7 +176,7 @@ impl FAT32FileSystem {
         Ok(())
     }
 
-    pub fn append_dir(
+    fn append_dir(
         &self,
         clusters: &mut Vec<usize>,
         occupy: &mut BitVec,
@@ -218,7 +222,7 @@ impl FAT32FileSystem {
         Ok((left, dirs.len()))
     }
 
-    pub fn remove_dir(
+    fn remove_dir(
         &self,
         clusters: &mut Vec<usize>,
         occupy: &mut BitVec,
@@ -240,12 +244,6 @@ impl FAT32FileSystem {
             }
         }
         Ok(())
-    }
-}
-
-impl FAT32FileSystem {
-    fn root(&self) -> Arc<dyn Inode> {
-        self.root.clone()
     }
 
     /// Calculate the block number and block offset of the FAT entry based on cluster number
@@ -291,7 +289,7 @@ impl FAT32FileSystem {
             }
         }
         if cluster == 0 {
-            warn!("Disk is full");
+            warn!("[fat32] Disk is full");
             return Err(Errno::ENOSPC);
         }
         self.write_fat_ent(cluster, FATEnt::EOF)?;
@@ -304,6 +302,6 @@ impl FAT32FileSystem {
 impl Drop for FAT32FileSystem {
     fn drop(&mut self) {
         unsafe { ManuallyDrop::drop(&mut self.root) };
-        info!("FAT32FileSystem dropped");
+        info!("[fat32] FAT32FileSystem dropped");
     }
 }

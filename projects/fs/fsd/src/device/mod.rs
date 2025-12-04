@@ -1,3 +1,5 @@
+pub mod virtio;
+
 use alloc::vec;
 use crate::result::{Errno, FsResult};
 
@@ -7,9 +9,6 @@ pub trait BlockDevice: Send + Sync {
 
     /// Device size
     fn dev_size(&self) -> usize;
-
-    /// Initialize after MMIO mapping is completed
-    fn init(&self);
 
     /// Read data from block device
     fn read_block(&self, block_id: usize, buf: &mut [u8]) -> FsResult;
