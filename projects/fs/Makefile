@@ -39,6 +39,9 @@ gdb: kernel apps
 gdb-openocd: kernel apps
 	@ELFS="${INIT_ELFS}" ${ROOT}/scripts/gdb-openocd.sh
 
+tpm:
+	@${ROOT}/scripts/start_tpm.sh
+
 disk-image: apps
 	qemu-img create fs.img 10M
 	mformat -i fs.img ::
