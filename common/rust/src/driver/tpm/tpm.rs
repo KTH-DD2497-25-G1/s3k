@@ -19,7 +19,10 @@ const TPM_STS_VALID:            u8 = 1 << 7;
 const TPM_STS_COMMAND_READY:    u8 = 1 << 6; 
 const TPM_STS_TPM_GO:           u8 = 1 << 5; 
 const TPM_STS_DATA_AVAIL:       u8 = 1 << 4; 
-const TPM_STS_EXPECT:           u8 = 1 << 3; 
+const TPM_STS_EXPECT:           u8 = 1 << 3;
+
+const TPM2_ST_NO_SESSIONS: u16 = 0x8001;
+const TPM2_CC_GET_RANDOM:  u32 = 0x0000017B;
 
 
 pub struct TpmDevice(usize);
@@ -219,8 +222,58 @@ impl TpmDevice {
         unsafe {
             self.fifo_ptr().read_volatile()
         }
-    } 
+    }
+
+
+    fn get_random_number(&self, output: &[u8]) -> Result<usize, Err>{
+
+        let requested = output.len() as u16;
+        let mut command_buffer = [0u8;12];
+
+        //tag
+        put_u16_be(&mut command, 0, TPM2_ST_NO_SESSION);
+        //length
+        put_u32_be(&mut command, 2, cmd.len() as u32);
+        //command
+        put_u32_be(&mut command, 6, TPM2_CC_GET_RANDOM);
+        //bytes
+        put_u16_be(&mut command, 10, requested);
+
+        //response buffer big enough for header + data
+        let mut response = [0u8,64]; //64 bytes should be big enough for GetRandom
+
+        //sending command, response contains the response (obviously) 
+        let response_length = self.send_raw_command(&command, &mut response)?;
+
+        if response_length < 10{
+            return Err(TpmError::BufferTooSmall);
+        }
+
+        let _tag = get_u16_be(&response, 0);
+        let _size = get_u16_be(&response, 0);
+        let response_code = get_u16_be(&response, 0);
+
+        if response_code != 0{
+            return Err(response_code)
+        };
+
+        let rand_size = get_u16_be(&response, 10) as usize;
+
+        let n = core::cmp::min(rand_size, output.len());
+
+        output[..n].copy_from_slice(&resp[12 .. 12 + n]);
+
+        Ok(n)
+
+    }
+
+
+
+
 }
+
+
+
 
 pub fn init_tpm() -> TpmDevice{
     let device = TpmDevice::new(TPM_TIS_BASE);
@@ -233,3 +286,28 @@ pub fn init_tpm() -> TpmDevice{
 
     return device
 }
+
+//Helper functions. Section written by AI
+fn put_u16_be(buf: &mut [u8], offset: usize, value: u16) {
+    buf[offset]     = (value >> 8) as u8;
+    buf[offset + 1] = (value & 0xFF) as u8;
+}
+
+fn put_u32_be(buf: &mut [u8], offset: usize, value: u32) {
+    buf[offset]     = (value >> 24) as u8;
+    buf[offset + 1] = (value >> 16) as u8;
+    buf[offset + 2] = (value >> 8) as u8;
+    buf[offset + 3] = (value & 0xFF) as u8;
+}
+
+fn get_u16_be(buf: &[u8], offset: usize) -> u16 {
+    ((buf[offset] as u16) << 8) | (buf[offset + 1] as u16)
+}
+
+fn get_u32_be(buf: &[u8], offset: usize) -> u32 {
+    ((buf[offset] as u32) << 24)
+        | ((buf[offset + 1] as u32) << 16)
+        | ((buf[offset + 2] as u32) << 8)
+        | (buf[offset + 3] as u32)
+}
+//End of written by AI section
