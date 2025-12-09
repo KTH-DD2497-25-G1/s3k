@@ -1,4 +1,5 @@
 pub mod virtio;
+pub mod tpm;
 
 use alloc::vec;
 use crate::result::{Errno, FsResult};
