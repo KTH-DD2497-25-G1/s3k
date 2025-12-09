@@ -23,6 +23,7 @@ use s3k_common::heap;
 use s3k_common::syscall::{s3k_cap_derive, s3k_cap_revoke, s3k_mon_cap_move, s3k_mon_pmp_load, s3k_mon_reg_write, s3k_pmp_load, s3k_pmp_unload, s3k_sock_recv, s3k_sock_send, s3k_sync_mem};
 use s3k_common::utils::*;
 use spin::Mutex;
+use crate::device::tpm::init_tpm;
 use crate::device::virtio::VirtIOBlkDevice;
 use crate::fat32::FAT32FileSystem;
 use crate::ffi::{InodeMode, OpenFlags};

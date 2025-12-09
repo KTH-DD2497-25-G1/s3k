@@ -33,7 +33,7 @@ impl TpmDevice {
     }
 }
 
-enum TpmError{
+pub enum TpmError{
     Timeout,
     BufferTooSmall,
     NotReady,
