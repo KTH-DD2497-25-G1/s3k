@@ -241,10 +241,10 @@ pub struct SockCap {
     #[bits(4)]
     pub mode: S3kIpcMode,
     #[bits(8, primitive = true)]
-    perm: u8,
+    pub perm: u8,
     #[bits(16, primitive = true)]
     pub chan: S3kChan,
-    tag: u32,
+    pub tag: u32,
 }
 impl_cap!(SockCap, CapType::Socket);
 

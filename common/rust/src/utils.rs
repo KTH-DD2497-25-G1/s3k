@@ -56,8 +56,11 @@ pub fn setup_uart_and_virtio() -> Result<(), S3kErr> {
 pub fn find_free_cap() -> Result<S3kCidx, S3kErr> {
     for i in FREE_CAP_BEGIN..FREE_CAP_END {
         match s3k_cap_read::<EmptyCap>(i) {
-            Ok(_) => return Ok(i),
-            Err(_) => continue,
+            Ok(_) => continue,
+            Err(e) => {
+                if e == S3kErr::Empty { return Ok(i); }
+                continue
+            },
         }
     }
     Err(S3kErr::InvalidCapability)
@@ -86,4 +89,12 @@ pub fn s3k_mk_pmp(addr: S3kNapot, rwx: S3kMemPerm) -> PmpCap {
         .with_rwx(rwx.bits())
         .with_used(false)
         .with_slot(0)
+}
+
+pub fn s3k_mk_socket(chan: S3kChan, mode: S3kIpcMode, perm: S3kIpcPerm, tag: u32) -> SockCap {
+    SockCap::new()
+        .with_chan(chan)
+        .with_mode(mode)
+        .with_perm(perm.bits())
+        .with_tag(tag)
 }
