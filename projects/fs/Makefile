@@ -25,7 +25,7 @@ kernel: common
 	@${MAKE} -C ${ROOT}/kernel
 
 apps:
-	@cargo build
+	@cargo +nightly build
 
 qemu: kernel apps
 	@ELFS="${INIT_ELFS}" ${ROOT}/scripts/qemu.sh -drive file=fs.img,if=none,format=raw,id=x0 -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
@@ -42,7 +42,6 @@ gdb-openocd: kernel apps
 disk-image: apps
 	qemu-img create fs.img 100M
 	mformat -i fs.img -F ::
-	mcopy -i fs.img ${RUST_BUILD}/app2 ::/app2
 
 disk-read:
 	mdir -i fs.img
