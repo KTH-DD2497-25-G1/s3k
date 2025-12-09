@@ -8,6 +8,7 @@ nocolor = []
 
 [dependencies]
 s3k-common = { path = "../../../common/rust", features = ["alloc", "qemu_virt4"] }
+fs-common = { path = "../common"}
 bitflags = "2.10"
 bitvec-rs = "=0.2.1"
 bytemuck = "1.24"

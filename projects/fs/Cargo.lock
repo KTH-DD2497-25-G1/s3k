@@ -6,6 +6,8 @@ version = 4
 name = "app1"
 version = "0.1.0"
 dependencies = [
+ "fs-common",
+ "log",
  "s3k-common",
 ]
 
@@ -98,6 +100,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fs-common"
+version = "0.1.0"
+dependencies = [
+ "bitflags",
+ "log",
+ "s3k-common",
+]
+
+[[package]]
 name = "fsd"
 version = "0.1.0"
 dependencies = [
@@ -105,6 +116,7 @@ dependencies = [
  "bitvec-rs",
  "bytemuck",
  "downcast-rs",
+ "fs-common",
  "log",
  "riscv",
  "s3k-common",
@@ -124,9 +136,9 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.28"
+version = "0.4.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34080505efa8e45a4b816c349525ebe327ceaa8559756f0356cba97ef3bf7432"
+checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
 name = "num-conv"

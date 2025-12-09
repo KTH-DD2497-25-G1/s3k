@@ -8,7 +8,7 @@ export S3K_CONF_H :=${abspath s3k_conf.h}
 
 include ${ROOT}/tools.mk
 
-APPS=fsd app1 app2
+APPS=fsd app1
 
 ELFS:=${BUILD}/kernel.elf ${patsubst %, ${RUST_BUILD}/%, ${APPS}}
 INIT_ELFS:=${BUILD}/kernel.elf ${patsubst %, ${RUST_BUILD}/%, fsd app1}

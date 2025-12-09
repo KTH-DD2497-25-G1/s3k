@@ -6,7 +6,6 @@ mod fat32;
 mod ffi;
 mod file;
 mod inode;
-mod logger;
 mod result;
 mod time;
 mod utils;
@@ -20,72 +19,45 @@ use log::{debug, error, info, warn};
 use s3k_common::ffi::{S3kCidx, S3kErr, S3kIpcMode, S3kIpcPerm, S3kMemPerm, S3kMsg, S3kReg, S3kReply};
 use s3k_common::plat::UART0_BASE_ADDR;
 use s3k_common::heap;
-use s3k_common::syscall::{s3k_cap_derive, s3k_cap_revoke, s3k_mon_cap_move, s3k_mon_pmp_load, s3k_mon_reg_write, s3k_pmp_load, s3k_pmp_unload, s3k_sock_recv, s3k_sock_send, s3k_sync_mem};
+use s3k_common::syscall::{s3k_cap_delete, s3k_cap_derive, s3k_cap_revoke, s3k_mon_cap_move, s3k_mon_pmp_load, s3k_mon_reg_write, s3k_mon_resume, s3k_mon_yield, s3k_pmp_load, s3k_pmp_unload, s3k_reg_write, s3k_sock_recv, s3k_sock_send, s3k_sync, s3k_sync_mem};
 use s3k_common::utils::*;
+use fs_common::OpenFlags;
 use spin::Mutex;
 use crate::device::virtio::VirtIOBlkDevice;
 use crate::fat32::FAT32FileSystem;
-use crate::ffi::{InodeMode, OpenFlags};
+use crate::ffi::{InodeMode};
 use crate::file::{DirFile, File, FileMeta, RegularFile, Seek};
 use crate::inode::Inode;
 use crate::result::Errno;
 
 type Result<T> = core::result::Result<T, S3kErr>;
 
-// Request codes
-const REQ_OPEN: u64 = 1;
-const REQ_CLOSE: u64 = 2;
-const REQ_READ: u64 = 3;
-const REQ_WRITE: u64 = 4;
-const REQ_SEEK: u64 = 5;
-const REQ_LS: u64 = 6;
-const REQ_SIZE: u64 = 7;
-const REQ_MKDIR: u64 = 8;
 
-fn setup_socket() -> Result<S3kCidx> {
-    let id_server = find_free_cap()?;
-    let y_mode = S3kIpcMode::NOYIELD;
-    let perm = S3kIpcPerm::SDATA | S3kIpcPerm::CDATA | S3kIpcPerm::CCAP | S3kIpcPerm::SCAP;
-    s3k_cap_derive(CHANNEL, id_server, s3k_mk_socket(0, y_mode, perm, 0))?;
-    let id_client = find_free_cap()?;
-    s3k_cap_derive(id_server, id_client, s3k_mk_socket(0, y_mode, perm, 1))?;
-    s3k_mon_cap_move(
-        MONITOR,
-        APP0_PID,
-        id_client,
-        APP1_PID,
-        APP_1_CAP_SOCKET,
-    )?;
-    Ok(id_server)
-}
+// fn load_shared_memory(socket: S3kCidx) -> Result<S3kCidx> {
+//     let mem_cap = find_free_cap()?;
+//     let request = loop {
+//         let r = s3k_sock_recv(socket, mem_cap);
+//         if r.err != S3kErr::Timeout {
+//             break r;
+//         }
+//     };
+//
+//     s3k_pmp_load(mem_cap, BUFFER_PMP)?;
+//     s3k_sync_mem();
+//
+//     info!("[server] Shared memory accepted at 0x{:x}", request.data[0]);
+//     Ok(mem_cap)
+// }
 
-fn load_shared_memory(socket: S3kCidx) -> Result<S3kCidx> {
-    let mem_cap = find_free_cap()?;
-    let request = loop {
-        let r = s3k_sock_recv(socket, mem_cap);
-        if r.err != S3kErr::Timeout {
-            break r;
-        }
-    };
-
-    s3k_pmp_load(mem_cap, BUFFER_PMP)?;
-    s3k_sync_mem();
-
-    info!("[server] Shared memory accepted at 0x{:x}", request.data[0]);
-    Ok(mem_cap)
-}
-
-fn unload_shared_memory(mem_cap: S3kCidx) -> Result<()> {
-
-    s3k_pmp_unload(mem_cap)?;
-    s3k_sync_mem();
-    s3k_cap_revoke(mem_cap)?;
-    Ok(())
-}
+// fn unload_shared_memory(mem_cap: S3kCidx) -> Result<()> {
+//
+//     s3k_pmp_unload(mem_cap)?;
+//     s3k_sync_mem();
+//     s3k_cap_revoke(mem_cap)?;
+//     Ok(())
+// }
 
 // Shared memory address (set after accepting shared memory)
-static SHARED_MEM_ADDR: Mutex<usize> = Mutex::new(0);
-const SHARED_MEM_SIZE: usize = 4096;
 struct FdTable {
     next_fd: i32,
     files: BTreeMap<i32, Arc<dyn File>>,
@@ -135,17 +107,15 @@ fn get_fs() -> Arc<FAT32FileSystem> {
 }
 
 /// Read a null-terminated string from shared memory
-fn read_path_from_shared_mem() -> alloc::string::String {
-    let addr = *SHARED_MEM_ADDR.lock();
-    let slice = unsafe { core::slice::from_raw_parts(addr as *const u8, SHARED_MEM_SIZE) };
-    let end = slice.iter().position(|&b| b == 0).unwrap_or(SHARED_MEM_SIZE);
+fn read_path_from_shared_mem(addr: u64, size: usize) -> alloc::string::String {
+    let slice = unsafe { core::slice::from_raw_parts(addr as *const u8, size) };
+    let end = slice.iter().position(|&b| b == 0).unwrap_or(size);
     alloc::string::String::from_utf8_lossy(&slice[..end]).into_owned()
 }
 
 /// Write data to shared memory
-fn write_to_shared_mem(data: &[u8]) -> usize {
-    let addr = *SHARED_MEM_ADDR.lock();
-    let len = core::cmp::min(data.len(), SHARED_MEM_SIZE);
+fn write_to_shared_mem(addr: u64, data: &[u8]) -> usize {
+    let len = data.len();
     unsafe {
         core::ptr::copy_nonoverlapping(data.as_ptr(), addr as *mut u8, len);
     }
@@ -153,9 +123,7 @@ fn write_to_shared_mem(data: &[u8]) -> usize {
 }
 
 /// Read data from shared memory
-fn read_from_shared_mem(len: usize) -> Vec<u8> {
-    let addr = *SHARED_MEM_ADDR.lock();
-    let len = core::cmp::min(len, SHARED_MEM_SIZE);
+fn read_from_shared_mem(addr: u64, len: usize) -> Vec<u8> {
     let slice = unsafe { core::slice::from_raw_parts(addr as *const u8, len) };
     slice.to_vec()
 }
@@ -228,7 +196,9 @@ fn mkdir_recursive(root: Arc<dyn Inode>, path: &str) -> core::result::Result<Arc
 /// Returns: fd on success, negative errno on failure
 fn handle_open(data: &[u64; 4]) -> i64 {
     let flags = OpenFlags::from_bits_truncate(data[1] as u32);
-    let path = read_path_from_shared_mem();
+    let path_size = data[2] as usize;
+    let path_ptr = data[3];
+    let path = read_path_from_shared_mem(path_ptr, path_size);
 
     debug!("[server] open: path={}, flags={:?}", path, flags);
 
@@ -315,6 +285,7 @@ fn handle_close(data: &[u64; 4]) -> i64 {
 fn handle_read(data: &[u64; 4]) -> i64 {
     let fd = data[1] as i32;
     let count = data[2] as usize;
+    let buffer_addr = data[3];
 
     debug!("[server] read: fd={}, count={}", fd, count);
 
@@ -323,10 +294,10 @@ fn handle_read(data: &[u64; 4]) -> i64 {
         None => return -(Errno::EBADF as i64),
     };
 
-    let mut buf = alloc::vec![0u8; core::cmp::min(count, SHARED_MEM_SIZE)];
+    let mut buf = alloc::vec![0u8; count];
     match file.read(&mut buf) {
         Ok(n) => {
-            write_to_shared_mem(&buf[..n as usize]);
+            write_to_shared_mem(buffer_addr,&buf[..n as usize]);
             n as i64
         }
         Err(e) => -(e as i64),
@@ -341,6 +312,7 @@ fn handle_read(data: &[u64; 4]) -> i64 {
 fn handle_write(data: &[u64; 4]) -> i64 {
     let fd = data[1] as i32;
     let count = data[2] as usize;
+    let buffer_addr = data[3];
 
     debug!("[server] write: fd={}, count={}", fd, count);
 
@@ -349,7 +321,7 @@ fn handle_write(data: &[u64; 4]) -> i64 {
         None => return -(Errno::EBADF as i64),
     };
 
-    let buf = read_from_shared_mem(count);
+    let buf = read_from_shared_mem(buffer_addr, count);
     match file.write(&buf) {
         Ok(n) => n as i64,
         Err(e) => -(e as i64),
@@ -391,6 +363,7 @@ fn handle_seek(data: &[u64; 4]) -> i64 {
 /// Returns: inode number on success (name written to shared mem), 0 if no more entries, negative errno on failure
 fn handle_ls(data: &[u64; 4]) -> i64 {
     let fd = data[1] as i32;
+    let buffer_addr = data[3];
 
     debug!("[server] ls: fd={}", fd);
 
@@ -407,11 +380,10 @@ fn handle_ls(data: &[u64; 4]) -> i64 {
             } else {
                 name.as_str()
             };
-            write_to_shared_mem(name_bytes.as_bytes());
+            write_to_shared_mem(buffer_addr, name_bytes.as_bytes());
             // Write null terminator
-            let addr = *SHARED_MEM_ADDR.lock();
             unsafe {
-                *((addr + name_bytes.len()) as *mut u8) = 0;
+                *((buffer_addr as usize + name_bytes.len()) as *mut u8) = 0;
             }
             inode.metadata().ino as i64
         }
@@ -436,23 +408,12 @@ fn handle_size(data: &[u64; 4]) -> i64 {
             None => return -(Errno::EBADF as i64),
         };
 
-        match file.metadata().inode.as_ref() {
+        return match file.metadata().inode.as_ref() {
             Some(inode) => inode.metadata().inner.lock().size as i64,
             None => -(Errno::EBADF as i64),
         }
-    } else {
-        // Get size from path in shared memory
-        let path = read_path_from_shared_mem();
-        let fs = get_fs();
-        let root = fs.root();
-
-        let inode = match lookup_path(root, &path) {
-            Ok(inode) => inode,
-            Err((_, _, e)) => return -(e as i64),
-        };
-
-        inode.metadata().inner.lock().size as i64
     }
+    return -(Errno::EBADFD as i64);
 }
 
 /// Handle MKDIR request
@@ -462,7 +423,9 @@ fn handle_size(data: &[u64; 4]) -> i64 {
 /// Returns: 0 on success, negative errno on failure
 fn handle_mkdir(data: &[u64; 4]) -> i64 {
     let recursive = data[1] != 0;
-    let path = read_path_from_shared_mem();
+    let path_size = data[2] as usize;
+    let path_ptr = data[3];
+    let path = read_path_from_shared_mem(path_ptr, path_size);
 
     debug!("[server] mkdir: path={}, recursive={}", path, recursive);
 
@@ -502,6 +465,7 @@ fn setup_other_app() -> Result<()> {
     let uart_addr = s3k_napot_encode(UART0_BASE_ADDR, 0x8);
     let app1_addr = s3k_napot_encode(APP_1_BASE_ADDR, APP_1_SIZE);
 
+    info!("App1 pmp addr:{:#x}", app1_addr);
     // Derive a PMP capability for app1 main memory
     let free_cap_mem_idx = find_free_cap()?;
     s3k_cap_derive(
@@ -555,13 +519,40 @@ fn setup_other_app() -> Result<()> {
     Ok(())
 }
 
+fn setup_socket() -> Result<S3kCidx> {
+    let id_server = find_free_cap()?;
+    let y_mode = S3kIpcMode::NOYIELD;
+    let perm = S3kIpcPerm::SDATA | S3kIpcPerm::CDATA;
+    s3k_cap_derive(CHANNEL, id_server, s3k_mk_socket(0, y_mode, perm, 0))?;
+    let id_client = find_free_cap()?;
+    s3k_cap_derive(id_server, id_client, s3k_mk_socket(0, y_mode, perm, 1))?;
+    s3k_mon_cap_move(
+        MONITOR,
+        APP0_PID,
+        id_client,
+        APP1_PID,
+        APP_1_CAP_SOCKET,
+    )?;
+    Ok(id_server)
+}
+
+fn run_other_app_with_schedule() -> Result<()>{
+    s3k_reg_write(S3kReg::SERVTIME, 100);
+    s3k_cap_delete(HART1_TIME)?;
+    s3k_cap_delete(HART2_TIME)?;
+    s3k_cap_delete(HART3_TIME)?;
+    let cap = find_free_cap()?;
+    s3k_cap_derive(HART0_TIME, cap, s3k_mk_time(0, 0, (S3K_SLOT_CNT / 2) as u16));
+    s3k_mon_cap_move(MONITOR, APP0_PID, cap, APP1_PID, APP_1_TIME)?;
+    //s3k_mon_cap_move(MONITOR, APP0_PID, HART1_TIME, APP1_PID, APP_1_TIME)?;
+    s3k_sync();
+    s3k_mon_resume(MONITOR, APP1_PID)?;
+    //s3k_mon_yield(MONITOR, APP1_PID)?;
+    Ok(())
+}
+
 fn handle_client(socket: S3kCidx) {
     loop {
-        let mem_cap = match load_shared_memory(socket) {
-            Err(_) => continue,
-            Ok(cap) => cap,
-        };
-
         // Use a closure to ensure unload happens after processing
         let result = (|| {
             let request = loop {
@@ -579,14 +570,14 @@ fn handle_client(socket: S3kCidx) {
             let req_code = request.data[0];
             debug!("[server] Received request code: {}", req_code);
             let result = match req_code {
-                REQ_OPEN => handle_open(&request.data),
-                REQ_CLOSE => handle_close(&request.data),
-                REQ_READ => handle_read(&request.data),
-                REQ_WRITE => handle_write(&request.data),
-                REQ_SEEK => handle_seek(&request.data),
-                REQ_LS => handle_ls(&request.data),
-                REQ_SIZE => handle_size(&request.data),
-                REQ_MKDIR => handle_mkdir(&request.data),
+                fs_common::REQ_OPEN => handle_open(&request.data),
+                fs_common::REQ_CLOSE => handle_close(&request.data),
+                fs_common::REQ_READ => handle_read(&request.data),
+                fs_common::REQ_WRITE => handle_write(&request.data),
+                fs_common::REQ_SEEK => handle_seek(&request.data),
+                fs_common::REQ_LS => handle_ls(&request.data),
+                fs_common::REQ_SIZE => handle_size(&request.data),
+                fs_common::REQ_MKDIR => handle_mkdir(&request.data),
                 _ => {
                     warn!("[server] Unknown request code: {}", req_code);
                     -(Errno::ENOSYS as i64)
@@ -595,11 +586,6 @@ fn handle_client(socket: S3kCidx) {
 
             Some(result)
         })();
-
-        // Always unload shared memory after processing (if load was successful)
-        if let Err(e) = unload_shared_memory(mem_cap) {
-            warn!("[server] Failed to unload shared memory: {:?}", e);
-        }
 
         // Send response if we have one
         if let Some(result) = result {
@@ -620,7 +606,7 @@ fn handle_client(socket: S3kCidx) {
 fn _main() -> Result<()> {
     setup_uart_and_virtio()?;
     heap::init();
-    logger::init();
+    fs_common::logger::init();
     info!("fsd start");
 
     let device = Arc::new(VirtIOBlkDevice::new());
@@ -649,10 +635,9 @@ fn _main() -> Result<()> {
     }
 
     // Setup app1 capabilities and PC
-    //setup_other_app()?;
+    setup_other_app()?;
     let socket = setup_socket()?;
-
-    // Accept shared memory from client
+    run_other_app_with_schedule()?;
 
     // Start handling client requests
     info!("[server] Starting request handler");

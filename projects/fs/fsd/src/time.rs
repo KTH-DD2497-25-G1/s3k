@@ -26,7 +26,7 @@ impl From<Duration> for TimeSpec {
 }
 
 pub fn real_time() -> Duration {
-    let hardware_ts = riscv::register::time::read();
+    let hardware_ts = 0;
     let ms = hardware_ts / (CPU_FREQ / MICROS_PER_SEC);
     Duration::from_micros(ms as u64)
 }

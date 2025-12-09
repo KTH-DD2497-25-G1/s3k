@@ -16,5 +16,5 @@ layout split
 fs cmd
 EOF
 
-riscv64-unknown-elf-gdb -x $TMP
+gdb -x $TMP
 rm $TMP

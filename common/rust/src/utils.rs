@@ -17,6 +17,8 @@ pub static HART3_TIME: S3kCidx = 7;
 pub static MONITOR: S3kCidx = 8;
 pub static CHANNEL: S3kCidx = 9;
 
+pub static S3K_SLOT_CNT: u64 = 32;
+
 // normal caps
 pub static UART_CAP: S3kCidx = 10;
 pub static UART_PMP: S3kPmpSlot = 1;
@@ -33,8 +35,8 @@ pub static APP_1_PMP_SLOT_UART: S3kPmpSlot = 1;
 pub static APP_1_PMP_SLOT_BUFFER: S3kPmpSlot = 2;
 
 // Other constants
-pub static APP_1_BASE_ADDR: usize = 0x80110000;
-pub static APP_1_SIZE: usize = 0x10000;
+pub static APP_1_BASE_ADDR: usize = 0x80200000;
+pub static APP_1_SIZE: usize = 0x100000;
 pub static SHARED_BUFFER_BASE: usize = APP_1_BASE_ADDR + APP_1_SIZE;
 pub static SHARED_BUFFER_SIZE: usize = 0x10000;
 
@@ -70,6 +72,8 @@ pub fn s3k_napot_encode(base: S3kAddr, size: usize) -> S3kNapot {
     ((base | (size / 2 - 1)) >> 2) as u64
 }
 
+
+
 pub fn s3k_mk_memory(bgn: usize, end: usize, rwx: S3kMemPerm) -> MemCap {
     let tag = bgn >> S3K_MAX_BLOCK_SIZE;
     let bgn_block = ((bgn - (tag << S3K_MAX_BLOCK_SIZE)) >> S3K_MIN_BLOCK_SIZE) as u16;
@@ -97,4 +101,12 @@ pub fn s3k_mk_socket(chan: S3kChan, mode: S3kIpcMode, perm: S3kIpcPerm, tag: u32
         .with_mode(mode)
         .with_perm(perm.bits())
         .with_tag(tag)
+}
+
+pub fn s3k_mk_time(hart: S3kHart, begin: S3kTimeSlot, end: S3kTimeSlot) -> TimeCap {
+    TimeCap::new()
+        .with_hart(hart)
+        .with_bgn(begin)
+        .with_mrk(begin)
+        .with_end(end)
 }

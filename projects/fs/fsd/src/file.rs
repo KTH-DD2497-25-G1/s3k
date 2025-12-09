@@ -1,7 +1,8 @@
 use alloc::sync::Arc;
 use alloc::vec::Vec;
 use spin::Mutex;
-use crate::ffi::{OpenFlags, PAGE_SIZE};
+use fs_common::OpenFlags;
+use crate::ffi::{PAGE_SIZE};
 use crate::inode::Inode;
 use crate::result::{Errno, FsResult};
 

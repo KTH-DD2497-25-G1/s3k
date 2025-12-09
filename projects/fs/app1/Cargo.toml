@@ -4,4 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-s3k-common = { path = "../../../common/rust", features = ["qemu_virt4"] }
+s3k-common = { path = "../../../common/rust", features = ["alloc", "qemu_virt4"] }
+fs-common = { path = "../common"}
+log = "0.4"

@@ -1,7 +1,8 @@
-use crate::ffi::{Gid, InodeMode, OpenFlags, Uid};
+use crate::ffi::{Gid, InodeMode, Uid};
 use crate::file::{DirFile, File, FileMeta, RegularFile};
 use crate::result::{Errno, FsResult};
 use crate::time::TimeSpec;
+use fs_common::OpenFlags;
 use alloc::format;
 use alloc::string::String;
 use alloc::sync::{Arc, Weak};

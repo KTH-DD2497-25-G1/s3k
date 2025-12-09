@@ -1,0 +1,12 @@
+[package]
+name = "fs-common"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+nocolor = []
+
+[dependencies]
+s3k-common = { path = "../../../common/rust", features = ["alloc", "qemu_virt4"] }
+bitflags = "2.10"
+log = "0.4"
