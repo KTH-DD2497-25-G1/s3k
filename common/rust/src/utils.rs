@@ -33,7 +33,7 @@ pub static APP_1_PMP_SLOT_UART: S3kPmpSlot = 1;
 pub static APP_1_PMP_SLOT_BUFFER: S3kPmpSlot = 2;
 
 // Other constants
-pub static APP_1_BASE_ADDR: usize = 0x80020000;
+pub static APP_1_BASE_ADDR: usize = 0x80110000;
 pub static APP_1_SIZE: usize = 0x10000;
 pub static SHARED_BUFFER_BASE: usize = APP_1_BASE_ADDR + APP_1_SIZE;
 pub static SHARED_BUFFER_SIZE: usize = 0x10000;
