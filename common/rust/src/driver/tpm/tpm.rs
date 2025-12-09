@@ -33,10 +33,11 @@ impl TpmDevice {
     }
 }
 
-Enum TpmError{
+enum TpmError{
     Timeout,
     BufferTooSmall,
     NotReady,
+    ResponseError(u16)
 
 }
 
@@ -97,7 +98,7 @@ impl TpmDevice {
     }
 
     fn read_response_from_fifo(&self, response: &mut [u8]) -> Result<usize, TpmError>{
-        let mut ok = false
+        let mut ok = false;
         for _ in 0..1000{
             let status = self.read_sts();
             if (status & TPM_STS_DATA_AVAIL) !=0 {
@@ -127,6 +128,7 @@ impl TpmDevice {
                 break;
             }
         }
+        Ok(index)
     }
 
     fn access_ptr(&self) -> *mut u8 {
@@ -151,7 +153,7 @@ impl TpmDevice {
 
     fn read_did_vid(&self) -> (u16, u16){
         unsafe {
-            let did_vid = did_vid_ptr().read_volatile();
+            let did_vid = self.did_vid_ptr().read_volatile();
             let did = (did_vid >> 16) as u16;
             let vid = (did_vid & 0xFFFF) as u16;
             (did, vid)
@@ -163,19 +165,19 @@ impl TpmDevice {
     }
 
     fn read_access(&self) -> u8{
-        unsafe { self.access_ptr().read_volatile())}
+        unsafe { self.access_ptr().read_volatile()}
     }
 
-    fn write_access(&self) -> u8{
-        unsafe { self.access_ptr().write_volatile(value))}
+    fn write_access(&self, value: u8){
+        unsafe { self.access_ptr().write_volatile(value)}
     }
 
     fn read_sts(&self) -> u8{
-        unsafe { self.sts_ptr().read_volatile())}
+        unsafe { self.sts_ptr().read_volatile()}
     }
 
-    fn write_sts(&self) -> u8{
-        unsafe { self.sts_ptr().write_volatile(value))}
+    fn write_sts(&self, value: u8){
+        unsafe { self.sts_ptr().write_volatile(value)}
     }
 
     pub fn request_locality_0(&self) -> bool{
@@ -225,25 +227,26 @@ impl TpmDevice {
     }
 
 
-    fn get_random_number(&self, output: &[u8]) -> Result<usize, Err>{
+    fn get_random_number(&self, output: &mut [u8]) -> Result<usize, TpmError>{
 
         let requested = output.len() as u16;
         let mut command_buffer = [0u8;12];
+        let commlen = command_buffer.len();
 
         //tag
-        put_u16_be(&mut command, 0, TPM2_ST_NO_SESSION);
+        put_u16_be(&mut command_buffer, 0, TPM2_ST_NO_SESSIONS);
         //length
-        put_u32_be(&mut command, 2, cmd.len() as u32);
+        put_u32_be(&mut command_buffer, 2, commlen as u32);
         //command
-        put_u32_be(&mut command, 6, TPM2_CC_GET_RANDOM);
+        put_u32_be(&mut command_buffer, 6, TPM2_CC_GET_RANDOM);
         //bytes
-        put_u16_be(&mut command, 10, requested);
+        put_u16_be(&mut command_buffer, 10, requested);
 
         //response buffer big enough for header + data
         let mut response = [0u8,64]; //64 bytes should be big enough for GetRandom
 
         //sending command, response contains the response (obviously) 
-        let response_length = self.send_raw_command(&command, &mut response)?;
+        let response_length = self.send_raw_command(&command_buffer, &mut response)?;
 
         if response_length < 10{
             return Err(TpmError::BufferTooSmall);
@@ -254,14 +257,14 @@ impl TpmDevice {
         let response_code = get_u16_be(&response, 0);
 
         if response_code != 0{
-            return Err(response_code)
+            return Err(TpmError::ResponseError(response_code))
         };
 
         let rand_size = get_u16_be(&response, 10) as usize;
 
         let n = core::cmp::min(rand_size, output.len());
 
-        output[..n].copy_from_slice(&resp[12 .. 12 + n]);
+        output[..n].copy_from_slice(&response[12 .. 12 + n]);
 
         Ok(n)
 
@@ -278,8 +281,8 @@ impl TpmDevice {
 pub fn init_tpm() -> TpmDevice{
     let device = TpmDevice::new(TPM_TIS_BASE);
 
-    let (did, vid) = dev.read_did_vid();
-    let rid = dev.read_rid();
+    let (did, vid) = device.read_did_vid();
+    let rid = device.read_rid();
 
     device.request_locality_0();
     device.command_ready();
