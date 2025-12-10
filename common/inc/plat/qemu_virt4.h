@@ -31,6 +31,7 @@
 		[1] = cap_mk_memory(0x80020000, 0x88000000, MEM_RWX), \
 		[2] = cap_mk_memory(0x10000000, 0x10002000, MEM_RW),  \
 		[3] = cap_mk_memory(0x200b000, 0x200c000, MEM_R),     \
+		[25] = cap_mk_memory(0x04000000, 0x04010000, MEM_RW), \
 		[4] = cap_mk_time(0, 0, S3K_SLOT_CNT),                \
 		[5] = cap_mk_time(1, 0, S3K_SLOT_CNT),                \
 		[6] = cap_mk_time(2, 0, S3K_SLOT_CNT),                \

@@ -55,7 +55,7 @@ for elf in $ELFS; do
 done
 
 qemu-system-riscv64 \
-	-M $QEMU_MACHINE,dumpdtb=hw-tpm.dtb \
+	-M $QEMU_MACHINE \
 	-smp $QEMU_SMP \
 	-m 128M -nographic \
 	-bios none \

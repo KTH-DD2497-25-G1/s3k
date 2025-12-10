@@ -623,6 +623,18 @@ fn _main() -> Result<()> {
     heap::init();
     logger::init();
     info!("fsd start");
+    setup_tpm_memory()?;
+    let tpm = init_tpm();
+
+    let mut random_number = [0u8;8];
+
+    match tpm.get_random_number(&mut random_number){
+        Ok(n) => info!("Got {n} bytes from tpm"),
+        Err(e) => warn!("{:?}",e),
+    };
+    info!("random num {:?}", random_number);
+
+    
 
     let device = Arc::new(VirtIOBlkDevice::new());
     info!("virtio block device created");

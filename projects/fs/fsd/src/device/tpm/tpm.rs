@@ -24,6 +24,9 @@ const TPM_STS_EXPECT:           u8 = 1 << 3;
 const TPM2_ST_NO_SESSIONS: u16 = 0x8001;
 const TPM2_CC_GET_RANDOM:  u32 = 0x0000017B;
 
+const TPM2_CC_STARTUP: u32 = 0x00000144;
+const TPM2_SU_CLEAR: u16 = 0x0000;
+
 
 pub struct TpmDevice(usize);
 
@@ -33,6 +36,7 @@ impl TpmDevice {
     }
 }
 
+#[derive(Debug)]
 pub enum TpmError{
     Timeout,
     BufferTooSmall,
@@ -59,11 +63,23 @@ impl AsPtr for usize {
 impl TpmDevice {
 
     fn send_raw_command(&self, command: &[u8], response: &mut [u8]) -> Result<usize, TpmError>{
+        use log::debug;
+    
+        debug!("[TPM] Starting send_raw_command");
+
+        if !self.command_ready() {
+            debug!("[TPM] Failed to set command ready");
+        return Err(TpmError::NotReady);
+    }
+
         self.Write_command_to_fifo(command)?;
-        
+        debug!("[TPM] Command written to FIFO");
+
         self.start_execution();
+        debug!("[TPM] Execution started, TPM_GO bit set");
 
         let num = self.read_response_from_fifo(response)?;
+        debug!("[TPM] Response read successfully");
 
         Ok(num)
     }
@@ -73,33 +89,29 @@ impl TpmDevice {
         }
 
     fn Write_command_to_fifo(&self, command: &[u8]) -> Result<(), TpmError> {
+        use log::debug;
+
         let sts = self.read_sts();
         let ready = (sts & TPM_STS_COMMAND_READY) != 0;
         if !ready {
+            debug!("[TPM] Not ready, STS: 0x{:x}", sts);
             return Err(TpmError::NotReady);
         }
 
-        for &b in command{
-            let mut ok = false;
+        debug!("[TPM] STS ready, writing {} bytes to FIFO", command.len());
 
-            for _ in 0..1000{ //arbitrary number just dont want it to freeze with a while loop
-                let status_now = self.read_sts();
-                if (status_now & TPM_STS_EXPECT) != 0 {
-                    ok = true;
-                    break;
-                }
-            }
-            if !ok{
-                return Err(TpmError::Timeout)
-            }
-            self.fifo_write_byte(b)
+        for (i, &b) in command.iter().enumerate() {
+            self.fifo_write_byte(b);
+            debug!("[TPM] Wrote byte {} of {}", i + 1, command.len());
         }
-        Ok (())
+    
+        debug!("[TPM] All bytes written to FIFO");
+        Ok(())
     }
 
     fn read_response_from_fifo(&self, response: &mut [u8]) -> Result<usize, TpmError>{
         let mut ok = false;
-        for _ in 0..1000{
+        for _ in 0..1_000_000{
             let status = self.read_sts();
             if (status & TPM_STS_DATA_AVAIL) !=0 {
                 ok = true;
@@ -184,7 +196,7 @@ impl TpmDevice {
         self.write_access(TPM_ACCESS_REQUEST_USE);
 
         //poll until valid + active locailty bits are set
-        for _ in 0..1_000{ //arbitrary number just dont want it to freeze with a while loop
+        for _ in 0..1_000_000{ //arbitrary number just dont want it to freeze with a while loop
             let access = self.read_access();
             let valid = (access & TPM_ACCESS_VALID) != 0;
             let active = (access & TPM_ACCESS_ACTIVE_LOCALITY) != 0;
@@ -198,15 +210,16 @@ impl TpmDevice {
     }
 
     pub fn command_ready(&self) -> bool {
+        use log::debug;
 
         self.write_sts(TPM_STS_COMMAND_READY);
 
-        for _ in 0..1_000 { //arbitrary number just dont want it to freeze with a while loop
+        for i in 0..1_000_000 { //arbitrary number just dont want it to freeze with a while loop
             let sts = self.read_sts();
-            let valid = (sts & TPM_STS_VALID) != 0;
             let ready = (sts & TPM_STS_COMMAND_READY) != 0;
 
-            if valid && ready {
+            if ready {
+                debug!("[TPM] Command ready after {} iterations, STS: 0x{:02x}", i, sts);
                 return true;
             }
         }
@@ -227,8 +240,10 @@ impl TpmDevice {
     }
 
 
-    fn get_random_number(&self, output: &mut [u8]) -> Result<usize, TpmError>{
+    pub fn get_random_number(&self, output: &mut [u8]) -> Result<usize, TpmError>{
+        use log::debug;
 
+        
         let requested = output.len() as u16;
         let mut command_buffer = [0u8;12];
         let commlen = command_buffer.len();
@@ -241,23 +256,30 @@ impl TpmDevice {
         put_u32_be(&mut command_buffer, 6, TPM2_CC_GET_RANDOM);
         //bytes
         put_u16_be(&mut command_buffer, 10, requested);
+        
+        debug!("[TPM] Command buffer: {:02x?}", &command_buffer);
+        debug!("[TPM] Sending GetRandom command, requesting {} bytes", requested);
 
         //response buffer big enough for header + data
-        let mut response = [0u8,64]; //64 bytes should be big enough for GetRandom
+        let mut response = [0u8;64]; //64 bytes should be big enough for GetRandom
 
         //sending command, response contains the response (obviously) 
         let response_length = self.send_raw_command(&command_buffer, &mut response)?;
+
+        debug!("[TPM] Got response of {} bytes", response_length);
+        debug!("[TPM] Response bytes: {:02x?}", &response[..response_length]);
 
         if response_length < 10{
             return Err(TpmError::BufferTooSmall);
         }
 
         let _tag = get_u16_be(&response, 0);
-        let _size = get_u16_be(&response, 0);
-        let response_code = get_u16_be(&response, 0);
+        let _size = get_u32_be(&response, 2);
+        let response_code = get_u32_be(&response, 6);
 
         if response_code != 0{
-            return Err(TpmError::ResponseError(response_code))
+            debug!("[TPM] ERROR: Non-zero response code: 0x{:08x}", response_code);
+            return Err(TpmError::ResponseError((response_code & 0xFFFF) as u16))    
         };
 
         let rand_size = get_u16_be(&response, 10) as usize;
@@ -270,7 +292,48 @@ impl TpmDevice {
 
     }
 
+    pub fn tpm_startup(&self) -> Result<(),TpmError>{
+        use log::{debug,info};
 
+        debug!("[TPM] Sending TPM2_Startups(CLEAR)");
+
+        let mut command_buffer = [0u8; 12];
+        let commlen = command_buffer.len();
+
+        put_u16_be(&mut command_buffer, 0, TPM2_ST_NO_SESSIONS);
+        // length
+        put_u32_be(&mut command_buffer, 2, commlen as u32);
+        // command code
+        put_u32_be(&mut command_buffer, 6, TPM2_CC_STARTUP);
+        // startup type (TPM2_SU_CLEAR)
+        put_u16_be(&mut command_buffer, 10, TPM2_SU_CLEAR);
+
+        debug!("[TPM] Startup command buffer: {:02x?}" , &command_buffer);
+
+        let mut response = [0u8; 64];
+        let response_length = self.send_raw_command(&command_buffer, &mut response)?;
+
+        if response_length < 10 {
+            return Err(TpmError::BufferTooSmall);
+        }
+
+        let response_code = get_u32_be(&response, 6);
+
+        if response_code !=0 {
+            debug!("[TPM] Startup error 0x{:08x}",response_code);
+
+            if response_code == 0x100{
+                debug!("[TPM] TPM already initialized");
+                return Ok(())
+            }
+            return Err(TpmError::ResponseError((response_code & 0xFFFF) as u16));
+        }
+        
+        debug!("[TPM] Startup Successful");
+        Ok(())
+
+
+    }
 
 
 }
@@ -278,14 +341,34 @@ impl TpmDevice {
 
 
 
-pub fn init_tpm() -> TpmDevice{
+pub fn init_tpm() -> TpmDevice{ // Device Id, Vendor Id and Revision Id.
+    use log::info;
+
     let device = TpmDevice::new(TPM_TIS_BASE);
+    info!("[TPM] Initializing tpm at 0x{:x}", TPM_TIS_BASE);
 
     let (did, vid) = device.read_did_vid();
-    let rid = device.read_rid();
+    info!("[TPM] Device id 0x{:x}",did);
+
+    if did == 0x0000 || did == 0xffff || vid == 0x0000 || vid == 0xffff {
+        info!("[TPM] ERROR: TPM device not responding! DID=0x{:x}, VID=0x{:x}", did, vid);
+        // Continue anyway for now, but this is the problem
+    }
 
     device.request_locality_0();
-    device.command_ready();
+    let locality_ok = device.request_locality_0();
+    info!("[TPM] Locality 0: {}", if locality_ok { "OK" } else { "FAILED" });
+
+    let cmd_ready = device.command_ready();
+    info!("[TPM] Command ready: {}", if cmd_ready { "OK" } else { "FAILED" });
+    
+    match device.tpm_startup() {
+        Ok(_) => info!("[TPM] Startup successful"),
+        Err(e) => info!("[TPM] Startup failed: {:?}", e),
+    }
+
+    let sts = device.read_sts();
+    info!("[TPM] Final STS: 0x{:02x}", sts);
 
     return device
 }

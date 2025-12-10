@@ -1,0 +1,1780 @@
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+Data client disconnected
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+Data client disconnected
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 20 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 20 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 20 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 20 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 20 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 20 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 20 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 08 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 44 00 00 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 44 00 00 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 08 
+ SWTPM_IO_Write: length 20
+ 80 01 00 00 00 14 00 00 00 00 00 08 54 22 5A 8A 
+ 66 B1 37 94 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 10 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 10
+ 80 01 00 00 00 0A 00 00 01 81 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 01 01 
+ Ctrl Cmd: length 4
+ 00 00 00 01 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 FF FF 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 00 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 4
+ 00 00 00 0E 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 11 00 00 10 00 
+ Ctrl Rsp: length 16
+ 00 00 00 00 00 00 10 00 00 00 0A F8 00 00 10 00 
+ Ctrl Cmd: length 8
+ 00 00 00 02 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ Ctrl Cmd: length 4
+ 00 00 00 04 
+ Ctrl Rsp: length 8
+ 00 00 00 00 00 00 00 00 
+ Ctrl Cmd: length 8
+ 00 00 00 05 00 00 00 00 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 44 00 00 
+ SWTPM_IO_Write: length 10
+ 80 01 00 00 00 0A 00 00 00 00 
+ SWTPM_IO_Read: length 12
+ 80 01 00 00 00 0C 00 00 01 7B 00 08 
+ SWTPM_IO_Write: length 20
+ 80 01 00 00 00 14 00 00 00 00 00 08 4B C8 3C C8 
+ 6A 4D F4 D1 
+ Ctrl Cmd: length 4
+ 00 00 00 03 
+ Ctrl Rsp: length 4
+ 00 00 00 00 
