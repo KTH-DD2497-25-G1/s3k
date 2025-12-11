@@ -352,7 +352,6 @@ pub fn init_tpm() -> TpmDevice{ // Device Id, Vendor Id and Revision Id.
 
     if did == 0x0000 || did == 0xffff || vid == 0x0000 || vid == 0xffff {
         info!("[TPM] ERROR: TPM device not responding! DID=0x{:x}, VID=0x{:x}", did, vid);
-        // Continue anyway for now, but this is the problem
     }
 
     device.request_locality_0();
