@@ -42,7 +42,7 @@ impl log::Log for SimpleLogger {
         if self.enabled(record.metadata()) {
             with_color!(
                 level_color(record.level()),
-                "[{:5}] [fsd] {}",
+                "[{:5}] {}",
                 record.level(),
                 record.args(),
             );
