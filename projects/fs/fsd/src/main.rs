@@ -626,13 +626,7 @@ fn _main() -> Result<()> {
     setup_tpm_memory()?;
     let tpm = init_tpm();
 
-    let mut random_number = [0u8;8];
-
-    match tpm.get_random_number(&mut random_number){
-        Ok(n) => info!("Got {n} bytes from tpm"),
-        Err(e) => warn!("{:?}",e),
-    };
-    info!("random num {:?}", random_number);
+    tpm.test_tpm_key().expect("TODO: panic message");
 
     
 
