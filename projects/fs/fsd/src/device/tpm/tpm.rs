@@ -326,7 +326,7 @@ impl TpmDevice {
         debug!("[TPM] Sending GetRandom command, requesting {} bytes", requested);
 
         //response buffer big enough for header + data
-        let mut response = [0u8;64]; //64 bytes should be big enough for GetRandom
+        let mut response = [0u8;512];
 
         //sending command, response contains the response (obviously) 
         let response_length = self.send_raw_command(&command_buffer, &mut response)?;
@@ -702,11 +702,11 @@ impl TpmDevice {
         let pin = b"123456";
         let mut pub_blob = [0u8; 512];
         let mut priv_blob = [0u8; 512];
-        let mut master_key = [0u8; 32];
+        let mut master_key = [0u8; 64];
         self.get_random_number(&mut master_key).map_err(UnlockError::TpmError)?;
         debug!("Master key: {:?}", master_key);
         let (pub_size, priv_size) =self.provision_master_key(pin, &master_key, &mut pub_blob, &mut priv_blob).map_err(UnlockError::TpmError)?;
-        debug!("Master key provisioned.");
+        debug!("Master key provisioned with public size {} and private size {}", pub_size, priv_size);
         let mut decrypted_key = [0u8; 32];
         let pin2 = b"123654";
         let sz = self.decrypt_master_key(pin2, &pub_blob[..pub_size], &priv_blob[..priv_size], &mut decrypted_key)?;
