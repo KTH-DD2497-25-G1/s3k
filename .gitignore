@@ -12,4 +12,7 @@ docs
 compile_commands.json
 .cache
 .idea
+.vscode
 target
+.DS_Store
+projects/fs/tpm0

@@ -18,3 +18,5 @@ riscv = "0.15"
 spin = "0.10"
 time = { version = "0.3", default-features = false }
 virtio-drivers = "0.12"
+aes = { version = "0.8", default-features = false }
+xts-mode = { version = "0.5", default-features = false }

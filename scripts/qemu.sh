@@ -54,10 +54,14 @@ for elf in $ELFS; do
 	LOADER+="-device loader,file=$elf "
 done
 
+CURRENT_DIR=$(pwd)
 qemu-system-riscv64 \
 	-M $QEMU_MACHINE \
 	-smp $QEMU_SMP \
 	-m 128M -nographic \
 	-bios none \
 	$LOADER \
+	-chardev socket,id=chrtpm,path=${CURRENT_DIR}/tpm0/swtpm-sock \
+	-tpmdev emulator,id=tpm0,chardev=chrtpm \
+	-device tpm-tis-device,tpmdev=tpm0 \
 	$QEMU_OPTIONS

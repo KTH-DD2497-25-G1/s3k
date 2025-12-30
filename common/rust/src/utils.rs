@@ -1,3 +1,5 @@
+use core::error;
+
 use crate::ffi::*;
 use crate::plat::UART0_BASE_ADDR;
 use crate::syscall::{s3k_cap_derive, s3k_cap_read, s3k_pmp_load, s3k_sync_mem};
@@ -16,6 +18,7 @@ pub static HART2_TIME: S3kCidx = 6;
 pub static HART3_TIME: S3kCidx = 7;
 pub static MONITOR: S3kCidx = 8;
 pub static CHANNEL: S3kCidx = 9;
+pub static TPM_MEM: S3kCidx = 25;
 
 pub static S3K_SLOT_CNT: u64 = 32;
 
@@ -51,6 +54,16 @@ pub fn setup_uart_and_virtio() -> Result<(), S3kErr> {
     s3k_pmp_load(UART_CAP, UART_PMP)?;
     // Synchronize PMP unit (hardware) with PMP configuration
     // false => not full synchronization.
+    s3k_sync_mem();
+    Ok(())
+}
+
+pub fn setup_tpm_memory() -> Result<(),S3kErr>{
+    let tpm_addr = s3k_napot_encode(0x0400_0000, 0x8000);
+    let tpm_pmp_cap = find_free_cap()?;
+    let new_cap = s3k_mk_pmp(tpm_addr, S3kMemPerm::RW);
+    s3k_cap_derive(TPM_MEM, tpm_pmp_cap, new_cap)?;
+    s3k_pmp_load(tpm_pmp_cap, 3)?;
     s3k_sync_mem();
     Ok(())
 }
