@@ -16,3 +16,4 @@ compile_commands.json
 target
 .DS_Store
 projects/fs/tpm0
+projects/fs/fs.img

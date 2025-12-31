@@ -3,7 +3,7 @@ use crate::result::{Errno, FsResult};
 use alloc::collections::BTreeMap;
 use core::cmp::PartialEq;
 use core::ptr::NonNull;
-use log::{error, warn};
+use log::{error, warn, debug, info};
 use s3k_common::heap::{HeapFrameTracker, alloc_frames};
 use spin::Mutex;
 use virtio_drivers::device::blk::{SECTOR_SIZE, VirtIOBlk};
@@ -161,7 +161,8 @@ impl BlockDevice for VirtIOBlkDeviceWithEncryption {
     }
 
     fn read_block(&self, block_id: usize, buf: &mut [u8]) -> FsResult {
-        match self.state.lock().working_mode {
+        let state = self.state.lock();
+        match state.working_mode {
             WorkingMode::Normal => {
                 self.block
                 .lock()
@@ -178,8 +179,7 @@ impl BlockDevice for VirtIOBlkDeviceWithEncryption {
                 .read_blocks(block_id + DATA_OFFSET_SECTORS, buf)
                 .inspect_err(|e| error!("VirtIOBlock read error: {:?}", e))
                 .map_err(|_| Errno::EIO)?;
-
-                match self.decrypt_data(buf, block_id) {
+                match self.decrypt_data(buf, block_id, state.algo_id, &state.algo_param) {
                     Ok(_) => Ok(()),
                     Err(_) => Err(EUNDEF),
                 }
@@ -190,7 +190,8 @@ impl BlockDevice for VirtIOBlkDeviceWithEncryption {
 
     fn write_block(&self, block_id: usize, buf: &[u8]) -> FsResult {
         use alloc::vec;
-        match self.state.lock().working_mode {
+        let state = self.state.lock();
+        match state.working_mode {
             WorkingMode::Normal => {
                 return self.block
                 .lock()
@@ -204,7 +205,7 @@ impl BlockDevice for VirtIOBlkDeviceWithEncryption {
             WorkingMode::Unlocked => {
                 let mut tmp_buf = vec![0u8; buf.len()];
                 tmp_buf.copy_from_slice(buf);
-                match self.encrypt_data(&mut tmp_buf, block_id) {
+                match self.encrypt_data(&mut tmp_buf, block_id, state.algo_id, &state.algo_param) {
                     Ok(_) => {
                         return self.block
                         .lock()
@@ -288,10 +289,11 @@ impl VirtIOBlkDeviceWithEncryption {
                 let meta_bytes = state.device_metadata.to_bytes();
                 block.write_blocks(0, &meta_bytes).map_err(|_| BlockOperationError::IOError)?;
                 //Encrypt all data sectors
+                info!("Enabling full disk encryption, please stand by");
                 let mut buffer = [0u8; SECTOR_SIZE];
                 for i in DATA_OFFSET_SECTORS..block.capacity() as usize {
                     block.read_blocks(i, &mut buffer).map_err(|_| BlockOperationError::IOError)?;
-                    self.encrypt_data(&mut buffer, i - DATA_OFFSET_SECTORS).map_err(|_| BlockOperationError::CryptoError)?;
+                    self.encrypt_data(&mut buffer, i - DATA_OFFSET_SECTORS, 0, &state.algo_param).map_err(|_| BlockOperationError::CryptoError)?;
                     block.write_blocks(i, &buffer).map_err(|_| BlockOperationError::IOError)?;
                 }
                 state.working_mode = WorkingMode::Unlocked;
@@ -323,12 +325,11 @@ impl VirtIOBlkDeviceWithEncryption {
         state.working_mode = WorkingMode::Unlocked;
         Ok(())
     }
-    fn encrypt_data(&self, buffer: &mut [u8], block_id: usize) -> Result<(),BlockOperationError>{
-        let state = self.state.lock();
-        match state.algo_id {
+    fn encrypt_data(&self, buffer: &mut [u8], block_id: usize, algo_id: u8, algo_param: &[u8]) -> Result<(),BlockOperationError>{
+        match algo_id {
             0 => {
-                let cipher_1 = Aes256::new(state.algo_param[0..32].into());
-                let cipher_2 = Aes256::new(state.algo_param[32..64].into());
+                let cipher_1 = Aes256::new(algo_param[0..32].into());
+                let cipher_2 = Aes256::new(algo_param[32..64].into());
 
                 // Initialize XTS mode.
                 // Note: We use Xts128 because AES has a 128-bit BLOCK size.
@@ -347,18 +348,16 @@ impl VirtIOBlkDeviceWithEncryption {
             }
         }
     }
-    fn decrypt_data(&self, buffer: &mut [u8], block_id: usize) -> Result<(),BlockOperationError>{
-        let state = self.state.lock();
-        match state.algo_id {
+    fn decrypt_data(&self, buffer: &mut [u8], block_id: usize, algo_id: u8, algo_param: &[u8]) -> Result<(),BlockOperationError>{
+        match algo_id {
             0 => {
-                let cipher_1 = Aes256::new(state.algo_param[0..32].into());
-                let cipher_2 = Aes256::new(state.algo_param[32..64].into());
+                let cipher_1 = Aes256::new(algo_param[0..32].into());
+                let cipher_2 = Aes256::new(algo_param[32..64].into());
 
                 // Initialize XTS mode.
                 // Note: We use Xts128 because AES has a 128-bit BLOCK size.
                 // The key size (256-bit) is determined by the `Aes256` generic.
                 let xts = Xts128::<Aes256>::new(cipher_1, cipher_2);
-
                 // Perform the decryption
                 // `get_tweak_default` handles standard endianness for the sector index
                 //catch panics from xts mode

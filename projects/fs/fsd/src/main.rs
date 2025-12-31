@@ -24,6 +24,7 @@ use s3k_common::utils::*;
 use fs_common::OpenFlags;
 use spin::Mutex;
 use crate::device::virtio::VirtIOBlkDevice;
+use crate::device::virtio_enc::{VirtIOBlkDeviceWithEncryption, WorkingMode};
 use crate::fat32::FAT32FileSystem;
 use crate::ffi::{InodeMode};
 use crate::file::{DirFile, File, FileMeta, RegularFile, Seek};
@@ -607,11 +608,16 @@ fn _main() -> Result<()> {
     setup_uart_and_virtio()?;
     heap::init();
     fs_common::logger::init();
+    setup_tpm_memory()?;
     info!("fsd start");
-
-    let device = Arc::new(VirtIOBlkDevice::new());
+    let device = Arc::new(VirtIOBlkDeviceWithEncryption::new());
     info!("virtio block device created");
-
+    let pin = [1u8,2,3,4,5,6];
+    if(device.get_state().working_mode == WorkingMode::Normal){
+        device.enable_encryption(0, &pin).unwrap();
+    }else if (device.get_state().working_mode == WorkingMode::Encrypted) {
+        device.unlock_device(&pin).unwrap();
+    }
     let fs = match FAT32FileSystem::new(device) {
         Ok(fs) => fs,
         Err(e) => {

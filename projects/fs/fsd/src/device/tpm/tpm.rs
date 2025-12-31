@@ -708,7 +708,7 @@ impl TpmDevice {
         let (pub_size, priv_size) =self.provision_master_key(pin, &master_key, &mut pub_blob, &mut priv_blob).map_err(UnlockError::TpmError)?;
         debug!("Master key provisioned with public size {} and private size {}", pub_size, priv_size);
         let mut decrypted_key = [0u8; 32];
-        let pin2 = b"123654";
+        let pin2 = b"123456";
         let sz = self.decrypt_master_key(pin2, &pub_blob[..pub_size], &priv_blob[..priv_size], &mut decrypted_key)?;
         debug!("Decrypted master key: {:?}", decrypted_key);
         if sz != decrypted_key.len() || decrypted_key[..sz] != master_key[..sz] {

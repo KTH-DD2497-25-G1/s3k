@@ -43,7 +43,11 @@ tpm:
 	@${ROOT}/scripts/start_tpm.sh
 
 disk-image: apps
-	qemu-img create fs.img 10M
+	qemu-img create fs.img 64M
+	mformat -i fs.img -F ::
+
+fsimg: apps
+	qemu-img create fs.img 64M
 	mformat -i fs.img -F ::
 
 disk-read:
