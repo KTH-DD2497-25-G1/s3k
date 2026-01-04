@@ -290,6 +290,7 @@ impl InodeInternal for FAT32Inode {
                 &child_dir,
             )?;
         }
+        inner.children.insert(name.to_string(), inode.clone());
         Ok(inode)
     }
 
