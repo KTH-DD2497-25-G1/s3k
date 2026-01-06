@@ -204,6 +204,16 @@ impl InodeInternal for FAT32Inode {
                 fs.write_fat_ent(prev, FATEnt::EOF)?;
             }
         }
+
+        let parent = self.metadata.parent.clone()
+            .and_then(|p| p.upgrade())
+            .map(|p| p.downcast_arc::<FAT32Inode>())
+            .and_then(Result::ok)
+            .ok_or(Errno::EIO)?;
+        let parent_inner = parent.inner.lock();
+        // The short directory entry is always the last one in a multi-entry dirent
+        let short_dir_pos = self.dir_pos + self.dir_len - 1;
+        fs.update_dir(&parent_inner.clusters, short_dir_pos, new_size)?;
         self.metadata.inner.lock().size = new_size as isize;
 
         Ok(())

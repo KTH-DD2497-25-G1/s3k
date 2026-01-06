@@ -339,6 +339,21 @@ impl FAT32FileSystem {
         Ok(())
     }
 
+    fn update_dir(&self, clusters: &[usize], pos: usize, size: usize) -> FsResult<()> {
+        let dirents_per_cluster = self.fat32meta.bytes_per_cluster / 32;
+        let dirents_per_sector = BLOCK_SIZE / 32;
+        let cluster = clusters[pos / dirents_per_cluster];
+        let sector_start = self.fat32meta.data_sector_for_cluster(cluster);
+        let sector_offset = (pos % dirents_per_cluster) / dirents_per_sector;
+        let sector = sector_start + sector_offset;
+        let block_offset = (pos % dirents_per_cluster) % dirents_per_sector * 32;
+        let mut buf = [0; 32];
+        self.device.read_block_offset(sector, &mut buf, block_offset)?;
+        buf[28..32].copy_from_slice(&(size as u32).to_le_bytes());
+        self.device.write_block_offset(sector, &buf, block_offset)?;
+        Ok(())
+    }
+
     fn append_dir(
         &self,
         clusters: &mut Vec<usize>,
