@@ -1,5 +1,5 @@
 MEMORY {
-	RAM (rwx) : ORIGIN = 0x80200000, LENGTH = 0x100000
+	RAM (rwx) : ORIGIN = 0x80200000, LENGTH = 0x200000
 }
 
-__stack_size = 2048;
+__stack_size = 0x10000;

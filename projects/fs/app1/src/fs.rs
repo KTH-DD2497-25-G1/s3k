@@ -71,4 +71,54 @@ impl FileSystem {
         let reply = s3k_sock_sendrecv(self.socket, &request);
         reply.data[0] as i64
     }
+
+    pub fn enable_encryption(&self, pin_len: usize, pin: &[u8]) -> i64 {
+        assert!(pin_len <= 16);
+        // First 8 bytes in one u64, next 8 bytes in another u64
+        let mut pin_part1: u64 = 0;
+        let mut pin_part2: u64 = 0;
+        for i in 0..pin_len.min(8) {
+            pin_part1 |= (pin[i] as u64) << (i * 8);
+        }
+        for i in 8..pin_len.min(16) {
+            pin_part2 |= (pin[i] as u64) << ((i - 8) * 8);
+        }
+        let request = S3kMsg {
+            data: [REQ_ENABLE_ENCRYPTION, pin_len as u64, pin_part1, pin_part2],
+            cap_idx: 0,
+            send_cap: false
+        };
+        let reply = s3k_sock_sendrecv(self.socket, &request);
+        reply.data[0] as i64
+    }
+
+    pub fn disable_encryption(&self) -> i64 {
+        let request = S3kMsg {
+            data: [REQ_DISABLE_ENCRYPTION, 0, 0, 0],
+            cap_idx: 0,
+            send_cap: false
+        };
+        let reply = s3k_sock_sendrecv(self.socket, &request);
+        reply.data[0] as i64
+    }
+
+    pub fn unlock_device(&self, pin_len: usize, pin: &[u8]) -> i64 {
+        assert!(pin_len <= 16);
+        // First 8 bytes in one u64, next 8 bytes in another u64
+        let mut pin_part1: u64 = 0;
+        let mut pin_part2: u64 = 0;
+        for i in 0..pin_len.min(8) {
+            pin_part1 |= (pin[i] as u64) << (i * 8);
+        }
+        for i in 8..pin_len.min(16) {
+            pin_part2 |= (pin[i] as u64) << ((i - 8) * 8);
+        }
+        let request = S3kMsg {
+            data: [REQ_UNLOCK_DEVICE, pin_len as u64, pin_part1, pin_part2],
+            cap_idx: 0,
+            send_cap: false
+        };
+        let reply = s3k_sock_sendrecv(self.socket, &request);
+        reply.data[0] as i64
+    }
 }

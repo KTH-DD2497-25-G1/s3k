@@ -89,7 +89,7 @@ impl FAT32Inode {
                     TimeSpec::default(),
                     TimeSpec::default(),
                     TimeSpec::default(),
-                    0,
+                    child.0.size as isize,
                 ),
                 fs: Arc::downgrade(&fs),
                 dir_pos: child.1 as usize,

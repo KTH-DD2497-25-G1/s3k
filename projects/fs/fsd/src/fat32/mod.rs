@@ -11,7 +11,7 @@ use alloc::vec::Vec;
 use bitvec_rs::BitVec;
 use core::cmp::min;
 use core::mem::ManuallyDrop;
-use log::{info, trace, warn};
+use log::{debug, error, info, trace, warn};
 
 macro_rules! section {
     ($buf:ident, $start:ident, $end:ident) => {
@@ -45,7 +45,7 @@ impl FAT32FileSystem {
 
         // Auto-format if metadata is empty/uninitialized.
         if Self::boot_sector_is_empty(&boot_sector) {
-            warn!("[fat32] empty boot sector detected; formatting device as FAT32");
+            warn!("[fat32] empty device detected; formatting device as FAT32");
             Self::format_device(&device)?;
             device.read_block(BOOT_SECTOR_ID, &mut boot_sector)?;
         }
@@ -58,7 +58,7 @@ impl FAT32FileSystem {
 
         let root_cluster = fs.fat32meta.root_cluster as u32;
         fs.root.init(FAT32Inode::root(&fs, root_cluster)?);
-        info!("[fat32] metadata: {:?}", fs.fat32meta);
+        debug!("[fat32] metadata: {:?}", fs.fat32meta);
         Ok(fs)
     }
 
@@ -94,11 +94,11 @@ impl FAT32FileSystem {
         }
 
         if sectors_per_cluster == 0 {
-            warn!("[fat32] Device too small for FAT32 (needs >= 65525 clusters)");
+            error!("[fat32] Device too small for FAT32 (needs >= 65525 clusters)");
             return Err(Errno::ENOSPC);
         }
 
-        info!("[fat32] Formatting with SPC: {}, Total Sectors: {}", sectors_per_cluster, total_sectors);
+        debug!("[fat32] Formatting with SPC: {}, Total Sectors: {}", sectors_per_cluster, total_sectors);
 
         let mut fat_sz: u32 = 0;
         // Standard iterative approximation

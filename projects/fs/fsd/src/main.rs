@@ -46,7 +46,7 @@ type Result<T> = core::result::Result<T, S3kErr>;
 //     s3k_pmp_load(mem_cap, BUFFER_PMP)?;
 //     s3k_sync_mem();
 //
-//     info!("[server] Shared memory accepted at 0x{:x}", request.data[0]);
+//     info!("[fs] Shared memory accepted at 0x{:x}", request.data[0]);
 //     Ok(mem_cap)
 // }
 
@@ -89,6 +89,7 @@ impl FdTable {
 }
 
 static FD_TABLE: Mutex<Option<FdTable>> = Mutex::new(None);
+static DEVICE: Mutex<Option<Arc<VirtIOBlkDeviceWithEncryption>>> = Mutex::new(None);
 static FS: Mutex<Option<Arc<FAT32FileSystem>>> = Mutex::new(None);
 
 fn init_fd_table() {
@@ -201,7 +202,7 @@ fn handle_open(data: &[u64; 4]) -> i64 {
     let path_ptr = data[3];
     let path = read_path_from_shared_mem(path_ptr, path_size);
 
-    debug!("[server] open: path={}, flags={:?}", path, flags);
+    debug!("[fs] open: path={}, flags={:?}", path, flags);
 
     let fs = get_fs();
     let root = fs.root();
@@ -210,7 +211,7 @@ fn handle_open(data: &[u64; 4]) -> i64 {
     if path == "/" || path.is_empty() {
         let file: Arc<dyn File> = DirFile::new(FileMeta::new(Some(root), flags));
         let fd = with_fd_table(|table| table.alloc(file));
-        debug!("[server] open: allocated fd={}", fd);
+        debug!("[fs] open: allocated fd={}", fd);
         return fd as i64;
     }
 
@@ -258,7 +259,7 @@ fn handle_open(data: &[u64; 4]) -> i64 {
     }
 
     let fd = with_fd_table(|table| table.alloc(file));
-    debug!("[server] open: allocated fd={}", fd);
+    debug!("[fs] open: allocated fd={}", fd);
     fd as i64
 }
 
@@ -268,7 +269,7 @@ fn handle_open(data: &[u64; 4]) -> i64 {
 /// Returns: 0 on success, negative errno on failure
 fn handle_close(data: &[u64; 4]) -> i64 {
     let fd = data[1] as i32;
-    debug!("[server] close: fd={}", fd);
+    debug!("[fs] close: fd={}", fd);
 
     let success = with_fd_table(|table| table.close(fd));
     if success {
@@ -288,7 +289,7 @@ fn handle_read(data: &[u64; 4]) -> i64 {
     let count = data[2] as usize;
     let buffer_addr = data[3];
 
-    debug!("[server] read: fd={}, count={}", fd, count);
+    debug!("[fs] read: fd={}, count={}", fd, count);
 
     let file = match with_fd_table(|table| table.get(fd)) {
         Some(f) => f,
@@ -315,7 +316,7 @@ fn handle_write(data: &[u64; 4]) -> i64 {
     let count = data[2] as usize;
     let buffer_addr = data[3];
 
-    debug!("[server] write: fd={}, count={}", fd, count);
+    debug!("[fs] write: fd={}, count={}", fd, count);
 
     let file = match with_fd_table(|table| table.get(fd)) {
         Some(f) => f,
@@ -340,7 +341,7 @@ fn handle_seek(data: &[u64; 4]) -> i64 {
     let offset = data[2] as isize;
     let whence = data[3] as i32;
 
-    debug!("[server] seek: fd={}, offset={}, whence={}", fd, offset, whence);
+    debug!("[fs] seek: fd={}, offset={}, whence={}", fd, offset, whence);
 
     let file = match with_fd_table(|table| table.get(fd)) {
         Some(f) => f,
@@ -366,7 +367,7 @@ fn handle_ls(data: &[u64; 4]) -> i64 {
     let fd = data[1] as i32;
     let buffer_addr = data[3];
 
-    debug!("[server] ls: fd={}", fd);
+    debug!("[fs] ls: fd={}", fd);
 
     let file = match with_fd_table(|table| table.get(fd)) {
         Some(f) => f,
@@ -400,7 +401,7 @@ fn handle_ls(data: &[u64; 4]) -> i64 {
 fn handle_size(data: &[u64; 4]) -> i64 {
     let fd = data[1] as i64;
 
-    debug!("[server] size: fd={}", fd);
+    debug!("[fs] size: fd={}", fd);
 
     if fd >= 0 {
         // Get size from open file descriptor
@@ -428,7 +429,7 @@ fn handle_mkdir(data: &[u64; 4]) -> i64 {
     let path_ptr = data[3];
     let path = read_path_from_shared_mem(path_ptr, path_size);
 
-    debug!("[server] mkdir: path={}, recursive={}", path, recursive);
+    debug!("[fs] mkdir: path={}, recursive={}", path, recursive);
 
     let fs = get_fs();
     let root = fs.root();
@@ -462,11 +463,109 @@ fn handle_mkdir(data: &[u64; 4]) -> i64 {
     }
 }
 
+fn read_user_pin(pin_ptr: *const u64, pin_len: usize, user_pin: &mut [u8; 16]) {
+    let len = core::cmp::min(pin_len, 16);
+    let pin_slice = unsafe { core::slice::from_raw_parts(pin_ptr as *const u8, len) };
+    user_pin[..len].copy_from_slice(&pin_slice[..len]);
+}
+/// Handle ENABLE_ENCRYPTION request
+/// data[0] = REQ_ENABLE_ENCRYPTION
+/// data[1] = User PIN Length (max 16)
+/// data[2...3] = User PIN
+/// Returns: 0 on success, negative errno on failure
+fn handle_enable_encryption(data: &[u64; 4]) -> i64 {
+    let pin_len = data[1] as usize;
+    let pin_ptr = &data[2] as *const u64;
+    let mut user_pin = [0u8; 16];
+    if pin_len > 16 {
+        return -(Errno::EINVAL as i64);
+    }
+    read_user_pin(pin_ptr, pin_len, &mut user_pin);
+
+    let device = DEVICE.lock();
+    let dev = match device.as_ref() {
+        Some(d) => d.clone(),
+        None => return -(Errno::ENODEV as i64),
+    };
+    debug!("[fs] enable_encryption: pin={:?}", &user_pin[..pin_len]);
+    match dev.get_state().working_mode {
+        WorkingMode::Normal => {
+            match dev.enable_encryption(0,&user_pin[..pin_len]) {
+                Ok(_) => 0,
+                Err(e) => -(Errno::from(e) as i64),
+            }
+        },
+        _ => {
+            error!("[fs] Device already in encrypted mode");
+            -(Errno::EBLOCK_INVALID_STATE as i64)
+        }
+    }
+}
+
+/// Handle DISABLE_ENCRYPTION request
+/// data[0] = REQ_DISABLE_ENCRYPTION
+/// Returns: 0 on success, negative errno on failure
+fn handle_disable_encryption() -> i64 {
+    let device = DEVICE.lock();
+    let dev = match device.as_ref() {
+        Some(d) => d.clone(),
+        None => return -(Errno::ENODEV as i64),
+    };
+    debug!("[fs] disable_encryption");
+    match dev.get_state().working_mode {
+        WorkingMode::Unlocked => {
+            match dev.disable_encryption() {
+                Ok(_) => 0,
+                Err(e) => -(Errno::from(e) as i64),
+            }
+        },
+        _ => {
+            error!("[fs] Device must be in unlocked mode!");
+            -(Errno::EBLOCK_INVALID_STATE as i64)
+        }
+    }
+}
+
+/// Handle UNLOCK_DEVICE request
+/// data[0] = REQ_UNLOCK_DEVICE
+/// data[1] = User PIN Length (max 16)
+/// data[2...3] = User PIN
+/// Returns: 0 on success, negative errno on failure
+fn handle_unlock_device(data: &[u64; 4]) -> i64 {
+    let pin_len = data[1] as usize;
+    let pin_ptr = &data[2] as *const u64;
+    let mut user_pin = [0u8; 16];
+    if pin_len > 16 {
+        return -(Errno::EINVAL as i64);
+    }
+    read_user_pin(pin_ptr, pin_len, &mut user_pin);
+    let device = DEVICE.lock();
+    let dev = match device.as_ref() {
+        Some(d) => d.clone(),
+        None => return -(Errno::ENODEV as i64),
+    };
+    debug!("[fs] unlock_device: pin={:?}", &user_pin[..pin_len]);
+    match dev.get_state().working_mode {
+        WorkingMode::Encrypted => {
+            match dev.unlock_device(&user_pin[..pin_len]) {
+                Ok(_) => {
+                    0
+                },
+                Err(e) => -(Errno::from(e) as i64),
+            }
+        }
+        _ => {
+            error!("[fs] Device must be in encrypted mode!");
+            -(Errno::EBLOCK_INVALID_STATE as i64)
+        }
+    }
+}
+
 fn setup_other_app() -> Result<()> {
     let uart_addr = s3k_napot_encode(UART0_BASE_ADDR, 0x8);
     let app1_addr = s3k_napot_encode(APP_1_BASE_ADDR, APP_1_SIZE);
 
-    info!("App1 pmp addr:{:#x}", app1_addr);
+    debug!("App1 pmp addr:{:#x}", app1_addr);
     // Derive a PMP capability for app1 main memory
     let free_cap_mem_idx = find_free_cap()?;
     s3k_cap_derive(
@@ -564,12 +663,12 @@ fn handle_client(socket: S3kCidx) {
             };
 
             if request.err != S3kErr::Success {
-                warn!("[server] Receive error: {:?}", request.err);
+                warn!("[fs] Receive error: {:?}", request.err);
                 return None;
             }
 
             let req_code = request.data[0];
-            debug!("[server] Received request code: {}", req_code);
+            debug!("[fs] Received request code: {}", req_code);
             let result = match req_code {
                 fs_common::REQ_OPEN => handle_open(&request.data),
                 fs_common::REQ_CLOSE => handle_close(&request.data),
@@ -579,11 +678,22 @@ fn handle_client(socket: S3kCidx) {
                 fs_common::REQ_LS => handle_ls(&request.data),
                 fs_common::REQ_SIZE => handle_size(&request.data),
                 fs_common::REQ_MKDIR => handle_mkdir(&request.data),
+                fs_common::REQ_ENABLE_ENCRYPTION => handle_enable_encryption(&request.data),
+                fs_common::REQ_DISABLE_ENCRYPTION => handle_disable_encryption(),
+                fs_common::REQ_UNLOCK_DEVICE => handle_unlock_device(&request.data),
                 _ => {
-                    warn!("[server] Unknown request code: {}", req_code);
+                    error!("[fs] Unknown request code: {}", req_code);
                     -(Errno::ENOSYS as i64)
                 }
             };
+            if (req_code == fs_common::REQ_UNLOCK_DEVICE || req_code == fs_common::REQ_ENABLE_ENCRYPTION) && result == 0 {
+                match load_fs() {
+                    Ok(()) =>{ return Some(result)}
+                    Err(e) => {
+                        return Some(-(e as i64));
+                    }
+                }
+            }
 
             Some(result)
         })();
@@ -598,12 +708,37 @@ fn handle_client(socket: S3kCidx) {
 
             let send_result = s3k_sock_send(socket, &response);
             if send_result != Ok(()) {
-                warn!("[server] Send error: {:?}", send_result);
+                error!("[fs] Send error: {:?}", send_result);
             }
         }
     }
 }
 
+fn load_fs () -> Result<()> {
+    // Load filesystem from device
+    let device = DEVICE.lock();
+    let dev = match device.as_ref() {
+        Some(d) => d.clone(),
+        None => {
+            error!("No device available");
+            return Err(S3kErr::Unknown);
+        }
+    };
+    let fs = match FAT32FileSystem::new(dev) {
+        Ok(fs) => fs,
+        Err(e) => {
+            error!("Failed to mount FAT32 filesystem: {:?}", e);
+            return Err(S3kErr::Unknown);
+        }
+    };
+    // Store filesystem globally
+    *FS.lock() = Some(fs.clone());
+
+    // Initialize file descriptor table
+    init_fd_table();
+    info!("filesystem mounted");
+    Ok(())
+}
 fn _main() -> Result<()> {
     setup_uart_and_virtio()?;
     heap::init();
@@ -612,41 +747,21 @@ fn _main() -> Result<()> {
     info!("fsd start");
     let device = Arc::new(VirtIOBlkDeviceWithEncryption::new());
     info!("virtio block device created");
-    let pin = [1u8,2,3,4,5,6];
-    if(device.get_state().working_mode == WorkingMode::Normal){
-        device.enable_encryption(0, &pin).unwrap();
-    }else if (device.get_state().working_mode == WorkingMode::Encrypted) {
-        device.unlock_device(&pin).unwrap();
-    }
-    let fs = match FAT32FileSystem::new(device) {
-        Ok(fs) => fs,
-        Err(e) => {
-            error!("Failed to mount FAT32 filesystem: {:?}", e);
-            return Err(S3kErr::Unknown);
+    {
+        *DEVICE.lock() = Some(device.clone());
+        if(device.get_state().working_mode == WorkingMode::Normal || device.get_state().working_mode == WorkingMode::Unlocked) {
+            load_fs()?;
+        }else{
+            warn!("Encrypted device detected. Please unlock device before executing other commands.")
         }
-    };
-    info!("filesystem mounted");
-
-    // Store filesystem globally
-    *FS.lock() = Some(fs.clone());
-
-    // Initialize file descriptor table
-    init_fd_table();
-
-    let root = fs.root();
-    let mut idx = 0;
-    while let Ok(inode) = root.clone().lookup_idx(idx) {
-        debug!("List file {}: {}", idx, inode.metadata().path);
-        idx += 1;
     }
-
     // Setup app1 capabilities and PC
     setup_other_app()?;
     let socket = setup_socket()?;
     run_other_app_with_schedule()?;
 
     // Start handling client requests
-    info!("[server] Starting request handler");
+    info!("[fs] Starting request handler");
     handle_client(socket);
 
     Ok(())

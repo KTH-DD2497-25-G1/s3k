@@ -11,6 +11,10 @@ pub const REQ_LS: u64 = 6;
 pub const REQ_SIZE: u64 = 7;
 pub const REQ_MKDIR: u64 = 8;
 
+pub const REQ_ENABLE_ENCRYPTION: u64 = 20;
+pub const REQ_DISABLE_ENCRYPTION: u64 = 21;
+pub const REQ_UNLOCK_DEVICE: u64 = 22;
+
 bitflags! {
     #[derive(Copy, Clone, Debug, Eq, PartialEq)]
     pub struct OpenFlags: u32 {

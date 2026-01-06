@@ -235,7 +235,7 @@ impl VirtIOBlkDeviceWithEncryption {
         block.read_blocks(0, &mut meta_block).unwrap();
         let mut metadata = DeviceMetadata::from_bytes(&meta_block);
         if metadata.magic != MAGIC_SIGNATURE {
-            warn!("Disk is uninitialized, formatting disk with destructive operation!");
+            warn!("[Block] Disk is uninitialized, formatting disk. All data will be lost!");
             metadata = DeviceMetadata::new();
             let new_meta_bytes = metadata.to_bytes();
             block.write_blocks(0, &new_meta_bytes).unwrap();
@@ -285,17 +285,36 @@ impl VirtIOBlkDeviceWithEncryption {
                 state.device_metadata.sealed_blob[idx..idx+4].copy_from_slice(&(priv_size as u32).to_le_bytes());
                 idx +=4;
                 state.device_metadata.sealed_blob[idx..idx+priv_size].copy_from_slice(&priv_blob[..priv_size]);
+                //info!("Encrypting all data sectors, this may take a while...");
+                //Encrypt all data sectors
+                // let cipher_1 = Aes256::new(state.algo_param[0..32].into());
+                // let cipher_2 = Aes256::new(state.algo_param[32..64].into());
+                // let xts = Xts128::<Aes256>::new(cipher_1, cipher_2);
+                // const BATCH_SIZE_SECTORS: usize = 512;
+                // let mut batch_buf = alloc::vec![0u8; BATCH_SIZE_SECTORS * SECTOR_SIZE];
+                // let total_sectors = block.capacity() as usize;
+                // let mut current_sector = DATA_OFFSET_SECTORS;
+                // while current_sector < total_sectors {
+                //     let sectors_left = total_sectors - current_sector;
+                //     info!("Encrypting sector {}/{}", current_sector - DATA_OFFSET_SECTORS, total_sectors - DATA_OFFSET_SECTORS);
+                //     let batch_count = core::cmp::min(BATCH_SIZE_SECTORS, sectors_left);
+                //     let byte_len = batch_count * SECTOR_SIZE;
+                //     let buffer_slice = &mut batch_buf[..byte_len];
+                //     block.read_blocks(current_sector, buffer_slice)
+                //         .map_err(|_| BlockOperationError::IOError)?;
+                //     for i in 0..batch_count {
+                //         let sector_offset = i * SECTOR_SIZE;
+                //         let sector_data = &mut buffer_slice[sector_offset..sector_offset + SECTOR_SIZE];
+                //         let tweak_id = (current_sector + i) as u128;
+                //         xts.encrypt_area(sector_data, SECTOR_SIZE, tweak_id, get_tweak_default);
+                //     }
+                //     block.write_blocks(current_sector, buffer_slice)
+                //         .map_err(|_| BlockOperationError::IOError)?;
+                //     current_sector += batch_count;
+                // }
                 //Write metadata back to disk
                 let meta_bytes = state.device_metadata.to_bytes();
                 block.write_blocks(0, &meta_bytes).map_err(|_| BlockOperationError::IOError)?;
-                //Encrypt all data sectors
-                info!("Enabling full disk encryption, please stand by");
-                let mut buffer = [0u8; SECTOR_SIZE];
-                for i in DATA_OFFSET_SECTORS..block.capacity() as usize {
-                    block.read_blocks(i, &mut buffer).map_err(|_| BlockOperationError::IOError)?;
-                    self.encrypt_data(&mut buffer, i - DATA_OFFSET_SECTORS, 0, &state.algo_param).map_err(|_| BlockOperationError::CryptoError)?;
-                    block.write_blocks(i, &buffer).map_err(|_| BlockOperationError::IOError)?;
-                }
                 state.working_mode = WorkingMode::Unlocked;
                 Ok(())
             }
@@ -303,7 +322,48 @@ impl VirtIOBlkDeviceWithEncryption {
                 return Err(BlockOperationError::UnSupportedAlgorithm);
             }
         }
-
+    }
+    pub fn disable_encryption(&self) -> Result<(),BlockOperationError>{
+        let mut state = self.state.lock();
+        let mut block = self.block.lock();
+        if state.working_mode != WorkingMode::Unlocked {
+            return Err(BlockOperationError::InvalidState);
+        }
+        //Decrypt all data sectors
+        info!("Decrypting all data sectors, this may take a while...");
+        let cipher_1 = Aes256::new(state.algo_param[0..32].into());
+        let cipher_2 = Aes256::new(state.algo_param[32..64].into());
+        let xts = Xts128::<Aes256>::new(cipher_1, cipher_2);
+        const BATCH_SIZE_SECTORS: usize = 512;
+        let mut batch_buf = alloc::vec![0u8; BATCH_SIZE_SECTORS * SECTOR_SIZE];
+        let total_sectors = block.capacity() as usize;
+        let mut current_sector = DATA_OFFSET_SECTORS;
+        while current_sector < total_sectors {
+            let sectors_left = total_sectors - current_sector;
+            info!("Decrypting sector {}/{}", current_sector - DATA_OFFSET_SECTORS, total_sectors - DATA_OFFSET_SECTORS);
+            let batch_count = core::cmp::min(BATCH_SIZE_SECTORS, sectors_left);
+            let byte_len = batch_count * SECTOR_SIZE;
+            let buffer_slice = &mut batch_buf[..byte_len];
+            block.read_blocks(current_sector, buffer_slice)
+                .map_err(|_| BlockOperationError::IOError)?;
+            for i in 0..batch_count {
+                let sector_offset = i * SECTOR_SIZE;
+                let sector_data = &mut buffer_slice[sector_offset..sector_offset + SECTOR_SIZE];
+                let tweak_id = (current_sector + i) as u128;
+                xts.decrypt_area(sector_data, SECTOR_SIZE, tweak_id, get_tweak_default);
+            }
+            block.write_blocks(current_sector, buffer_slice)
+                .map_err(|_| BlockOperationError::IOError)?;
+            current_sector += batch_count;
+        }
+        //Write metadata back to disk
+        state.device_metadata.is_encrypted = 0;
+        state.device_metadata.sealed_blob = [0u8; 505];
+        let meta_bytes = state.device_metadata.to_bytes();
+        block.write_blocks(0, &meta_bytes).map_err(|_| BlockOperationError::IOError)?;
+        state.working_mode = WorkingMode::Normal;
+        state.algo_param = [0u8; 64];
+        Ok(())
     }
     pub fn unlock_device(& self, pin: &[u8]) -> Result<(),BlockOperationError>{
         let mut state = self.state.lock();
@@ -330,16 +390,10 @@ impl VirtIOBlkDeviceWithEncryption {
             0 => {
                 let cipher_1 = Aes256::new(algo_param[0..32].into());
                 let cipher_2 = Aes256::new(algo_param[32..64].into());
-
-                // Initialize XTS mode.
+                
                 // Note: We use Xts128 because AES has a 128-bit BLOCK size.
                 // The key size (256-bit) is determined by the `Aes256` generic.
                 let xts = Xts128::<Aes256>::new(cipher_1, cipher_2);
-
-                // Perform the encryption
-                // `get_tweak_default` handles standard endianness for the sector index
-                //catch panics from xts mode
-
                 xts.encrypt_area(buffer, buffer.len(), block_id as u128, get_tweak_default);
                 Ok(())
             }
@@ -354,14 +408,9 @@ impl VirtIOBlkDeviceWithEncryption {
                 let cipher_1 = Aes256::new(algo_param[0..32].into());
                 let cipher_2 = Aes256::new(algo_param[32..64].into());
 
-                // Initialize XTS mode.
                 // Note: We use Xts128 because AES has a 128-bit BLOCK size.
                 // The key size (256-bit) is determined by the `Aes256` generic.
                 let xts = Xts128::<Aes256>::new(cipher_1, cipher_2);
-                // Perform the decryption
-                // `get_tweak_default` handles standard endianness for the sector index
-                //catch panics from xts mode
-
                 xts.decrypt_area(buffer, buffer.len(), block_id as u128, get_tweak_default);
                 Ok(())
             }

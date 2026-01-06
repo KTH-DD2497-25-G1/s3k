@@ -2,7 +2,7 @@ use buddy_system_allocator::LockedHeap;
 use core::alloc::Layout;
 use core::ptr::NonNull;
 
-const USER_HEAP_SIZE: usize = 0x70000; // 448 KB
+const USER_HEAP_SIZE: usize = 0x100000; // 1 MB
 
 static mut HEAP_SPACE: [u8; USER_HEAP_SIZE] = [0; USER_HEAP_SIZE];
 

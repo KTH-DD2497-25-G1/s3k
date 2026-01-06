@@ -1,7 +1,0 @@
-[package]
-name = "app2"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-s3k-common = { path = "../../../common/rust", features = ["qemu_virt4"] }

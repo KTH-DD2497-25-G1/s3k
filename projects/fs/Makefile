@@ -27,10 +27,10 @@ kernel: common
 apps:
 	@cargo +nightly build
 
-qemu: kernel apps
+qemu: kernel apps tpm
 	@ELFS="${INIT_ELFS}" ${ROOT}/scripts/qemu.sh -drive file=fs.img,if=none,format=raw,id=x0 -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
-qemu-gdb: kernel apps
+qemu-gdb: kernel apps tpm
 	@ELFS="${ELFS}" ${ROOT}/scripts/qemu.sh -gdb tcp::3333 -S -drive file=fs.img,if=none,format=raw,id=x0 -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 gdb: kernel apps
@@ -44,7 +44,6 @@ tpm:
 
 disk-image: apps
 	qemu-img create fs.img 64M
-	mformat -i fs.img -F ::
 
 fsimg: apps
 	qemu-img create fs.img 64M

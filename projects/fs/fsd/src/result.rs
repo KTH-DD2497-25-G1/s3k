@@ -1,3 +1,5 @@
+use crate::device::virtio_enc::BlockOperationError;
+
 pub type FsResult<T = ()> = Result<T, Errno>;
 
 #[repr(i32)]
@@ -135,4 +137,28 @@ pub enum Errno {
     ENOTRECOVERABLE = 131,
     ERFKILL = 132,
     EHWPOISON = 133,
+    EBLOCK_UNDEFINED = 1000,
+    EBLOCK_ALGO_UNSUPPORTED = 1001,
+    EBLOCK_DEVICE_ENCRYPTED = 1002,
+    EBLOCK_INVALID_STATE = 1003,
+    EBLOCK_TPM_ERROR = 1004,
+    EBLOCK_UNLOCK_ERROR = 1005,
+    EBLOCK_CRYPTO = 1006,
+    EBLOCK_IO = 1007,
+}
+
+impl From<BlockOperationError> for Errno {
+    fn from(error: BlockOperationError) -> Self {
+        match error {
+            BlockOperationError::Undefined => Errno::EBLOCK_UNDEFINED,
+            BlockOperationError::UnSupportedAlgorithm => Errno::EBLOCK_ALGO_UNSUPPORTED,
+            BlockOperationError::DeviceEncrypted => Errno::EBLOCK_DEVICE_ENCRYPTED,
+            BlockOperationError::InvalidState => Errno::EBLOCK_INVALID_STATE,
+            BlockOperationError::CryptoError => Errno::EBLOCK_CRYPTO,
+            BlockOperationError::IOError => Errno::EBLOCK_IO,
+            
+            BlockOperationError::TpmError(_) => Errno::EBLOCK_TPM_ERROR,
+            BlockOperationError::UnlockError(_) => Errno::EBLOCK_UNLOCK_ERROR,
+        }
+    }
 }
