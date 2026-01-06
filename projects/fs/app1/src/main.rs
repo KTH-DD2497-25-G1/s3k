@@ -44,9 +44,9 @@ fn help() {
     println!("  open <path> <mode>     - Open file (mode: r, w, rw, a)");
     println!("  read <fd> <len>        - Read <len> bytes from <fd>");
     println!("  write <fd> <string>    - Write <string> to <fd>");
-    println!("  seek <fd> <off> <loc>  - Seek (loc: 0=Set, 1=Cur, 2=End)");
+    println!("  seek <fd> <offset> <loc>  - Seek (loc: 0=Set, 1=Cur, 2=End)");
     println!("  close <fd>             - Close <fd>");
-    println!("  enc_on <pin>           - Enable Encryption");
+    println!("  enc_on <pin>           - Enable Encryption, disk will be formatted");
     println!("  enc_off                - Disable Encryption");
     println!("  unlock <pin>           - Unlock Device");
 }
@@ -129,7 +129,7 @@ fn _main() -> Result<()> {
 
             "seek" => {
                 if parts.len() < 4 {
-                    println!("Usage: seek <fd> <offset> <whence>");
+                    println!("Usage: seek <fd> <offset> <loc>");
                     continue;
                 }
                 let fd = parts[1].parse::<i64>().unwrap_or(-1);
