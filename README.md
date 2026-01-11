@@ -3,6 +3,8 @@ S3K - Simple Secure Separation Kernel
 
 S3K is a capability-based separation kernel targetting embedded RISC-V systems.
 
+[Testing instructions for Group 1's course project](TEST.md)   
+
 Documentation
 -------------
 
