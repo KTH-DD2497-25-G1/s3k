@@ -1,7 +1,7 @@
 # Testing instructions for the encrypted s3k filesystem
 
 ## Prerequisites
-- Ensure you have Rustup installed.
+- Ensure you have **rustup** and **swtpm** package installed on your OS.
 - Install the toolchains:
 ```sh
 cd projects/fs
